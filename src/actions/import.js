@@ -1,6 +1,8 @@
 "use strict";
 
-var aws = require("aws-sdk"),
+var fs    = require("fs"),
+    
+    aws   = require("aws-sdk"),
     async = require("async");
 
 module.exports = function(env) {
@@ -21,7 +23,7 @@ module.exports = function(env) {
                 accessKeyId     : env.key,
                 secretAccessKey : env.secret,
                 sslEnabled      : true,
-                logger          : console,
+                logger          : env.verbose ? console : null,
                 httpOptions     : http
             });
 
@@ -120,7 +122,14 @@ module.exports = function(env) {
             );
         }
     ], function(err, data) {
-        console.log(err); //TODO: REMOVE DEBUGGING
-        console.log(JSON.stringify(data.zones, null, 4)); //TODO: REMOVE DEBUGGING
+        if(err) {
+            throw new Error(err);
+        }
+        
+        if(env.output) {
+            fs.writeFileSync(env.output, JSON.stringify(data.zones, null, 4), "utf8");
+        } else {
+            console.log(JSON.stringify(data.zones, null, 4));
+        }
     });
 };
