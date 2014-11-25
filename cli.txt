@@ -1,0 +1,18 @@
+Sync53, a more sane way to manage Route53
+
+Usage:
+  sync53 import
+  sync53 import [options]
+  sync53 import [options] [<zones> ...]
+  sync53 import [options] -o --output=<file> [<zones> ...]
+  sync53 export <file>
+  sync53 export [options] <file>
+  sync53 -h | --help | --version
+  sync53 --version
+
+Options:
+  -h --help     Show this screen.
+  --version     Show version.
+  -v --verbose  Verbose output
+  --silent      Only errors will be output
+  -o <file>, --output <file>  Save imported config to a file

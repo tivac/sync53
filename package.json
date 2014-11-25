@@ -2,7 +2,7 @@
   "name": "sync53",
   "version": "1.0.0",
   "description": "Sync a Route53 account with a local config",
-  "main": "index.js",
+  "main": "./src/index.js",
   "scripts": {
     "test": "mocha"
   },
@@ -21,6 +21,6 @@
   "dependencies": {
     "async": "^0.9.0",
     "aws": "0.0.3-2",
-    "commander": "^2.5.0"
+    "docopt": "^0.4.1"
   }
 }
