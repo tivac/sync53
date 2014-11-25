@@ -1,0 +1,26 @@
+{
+  "name": "sync53",
+  "version": "1.0.0",
+  "description": "Sync a Route53 account with a local config",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "route53",
+    "aws",
+    "amazon",
+    "sync"
+  ],
+  "author": "Pat Cavit <pcavit@arena.net>",
+  "license": "MIT",
+  "devDependencies": {
+    "istanbul": "^0.3.2",
+    "mocha": "^2.0.1"
+  },
+  "dependencies": {
+    "async": "^0.9.0",
+    "aws": "0.0.3-2",
+    "commander": "^2.5.0"
+  }
+}
