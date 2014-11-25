@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "async": "^0.9.0",
-    "aws": "0.0.3-2",
-    "fdocopt": "^0.1.2"
+    "aws-sdk": "^2.0.28",
+    "commander": "^2.5.0"
   }
 }
