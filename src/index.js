@@ -9,18 +9,14 @@ var program = require("commander"),
         secret : process.env.AWS_SECRET_ACCESS_KEY
     };
 
-function options() {
+function options(src) {
     var opts = {};
 
-    program.options.forEach(function(option) {
+    src.options.forEach(function(option) {
         var name = option.long.replace(/^--/, "");
 
-        if(name === "version") {
-            return;
-        }
-
-        if(name in program) {
-            opts[name] = program[name];
+        if(name in src) {
+            opts[name] = src[name];
         }
     });
 
@@ -55,8 +51,8 @@ program
     .command("import [zones...]")
     .description("Import DNS information from Route53")
     .option("-o, --output <file>", "Save imported config to a file")
-    .action(function(zones) {
-        require("./actions/import")(merge(access, options(), {
+    .action(function(zones, env) {
+        require("./actions/import")(merge(access, options(env.parent), options(env), {
             zones : zones
         }));
     });
@@ -64,8 +60,8 @@ program
 program
     .command("export <file> [zones...]")
     .description("Write the config stored in file to Route53")
-    .action(function(file, zones) {
-        require("./actions/export")(merge(access, options(), {
+    .action(function(file, zones, env) {
+        require("./actions/export")(merge(access, options(env.parent), options(env), {
             file  : file,
             zones : zones
         }));
