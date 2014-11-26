@@ -16,7 +16,7 @@ module.exports = joi.object({
     },
     Failover: joi.string().valid([ "PRIMARY", "SECONDARY" ]),
     GeoLocation: {
-        ContinentCode: lib.str,
+        ContinentCode: joi.string().valid([ "AF", "AN", "AS", "EU", "OC", "NA", "SA" ]),
         CountryCode: lib.str,
         SubdivisionCode: lib.str
     },
