@@ -1,0 +1,13 @@
+[*]
+# newline ending every file
+insert_final_newline = true
+# default charset
+charset = utf-8
+# 4 space indentation
+indent_style = space
+indent_size = 4
+
+# Package.json override because NPM
+[package.json]
+indent_style = space
+indent_size = 2
