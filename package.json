@@ -22,7 +22,9 @@
     "async": "^0.9.0",
     "aws-sdk": "^2.0.28",
     "commander": "^2.5.0",
-    "joi": "^4.9.0"
+    "joi": "^4.9.0",
+    "moment": "^2.8.4",
+    "object-path": "^0.8.1"
   },
   "repository": {
     "type": "git",

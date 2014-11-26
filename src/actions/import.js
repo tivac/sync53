@@ -4,9 +4,10 @@ var fs    = require("fs"),
     
     aws   = require("aws-sdk"),
     async = require("async"),
-    joi   = require("joi"),
 
-    schema = require("../validators/aws/");
+    validateAWS    = require("../validators/aws/"),
+    validateConfig = require("../validators/config/"),
+    transform = require("../transformers/aws-to-config");
 
 function stripTrailingSpace(name) {
     return name.replace(/\.$/, "");
@@ -134,16 +135,13 @@ module.exports = function(env) {
                         return done(err);
                     }
 
-                    data.zones = zones;
-
-                    done(null, data);
+                    done(null, zones);
                 }
             );
         },
 
-        function validateResults(data, done) {
-            joi.validate(data.zones, schema, done);
-        }
+        validateAWS,
+        transform
     ], function(err, zones) {
         if(err) {
             throw new Error(err);
