@@ -1,0 +1,208 @@
+[
+    {
+        "Id": "/hostedzone/Z3Q0U8XT057BHC",
+        "Name": "tivac.com.",
+        "CallerReference": "C1AA3098-5002-67B4-8237-F2A2DB4992D9",
+        "Config": {
+            "Comment": "Testing",
+            "PrivateZone": false
+        },
+        "ResourceRecordSetCount": 16,
+        "records": [
+            {
+                "Name": "tivac.com.",
+                "Type": "NS",
+                "TTL": 172800,
+                "ResourceRecords": [
+                    {
+                        "Value": "ns-400.awsdns-50.com."
+                    },
+                    {
+                        "Value": "ns-1099.awsdns-09.org."
+                    },
+                    {
+                        "Value": "ns-1775.awsdns-29.co.uk."
+                    },
+                    {
+                        "Value": "ns-863.awsdns-43.net."
+                    }
+                ]
+            },
+            {
+                "Name": "tivac.com.",
+                "Type": "SOA",
+                "TTL": 900,
+                "ResourceRecords": [
+                    {
+                        "Value": "ns-400.awsdns-50.com. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400"
+                    }
+                ]
+            },
+            {
+                "Name": "alias-a.tivac.com.",
+                "Type": "A",
+                "ResourceRecords": [],
+                "AliasTarget": {
+                    "HostedZoneId": "Z3Q0U8XT057BHC",
+                    "DNSName": "simple-a.tivac.com.",
+                    "EvaluateTargetHealth": false
+                }
+            },
+            {
+                "Name": "cname.tivac.com.",
+                "Type": "CNAME",
+                "TTL": 300,
+                "ResourceRecords": [
+                    {
+                        "Value": "simple-b.tivac.com"
+                    }
+                ]
+            },
+            {
+                "Name": "geoloc.tivac.com.",
+                "Type": "A",
+                "SetIdentifier": "europe",
+                "GeoLocation": {
+                    "ContinentCode": "EU"
+                },
+                "TTL": 300,
+                "ResourceRecords": [
+                    {
+                        "Value": "127.0.0.9"
+                    }
+                ]
+            },
+            {
+                "Name": "geoloc.tivac.com.",
+                "Type": "A",
+                "SetIdentifier": "thailand",
+                "GeoLocation": {
+                    "CountryCode": "TH"
+                },
+                "TTL": 300,
+                "ResourceRecords": [
+                    {
+                        "Value": "127.0.0.10"
+                    }
+                ]
+            },
+            {
+                "Name": "geoloc.tivac.com.",
+                "Type": "A",
+                "SetIdentifier": "washington",
+                "GeoLocation": {
+                    "CountryCode": "US",
+                    "SubdivisionCode": "WA"
+                },
+                "TTL": 300,
+                "ResourceRecords": [
+                    {
+                        "Value": "127.0.0.8"
+                    }
+                ]
+            },
+            {
+                "Name": "latency.tivac.com.",
+                "Type": "A",
+                "SetIdentifier": "euwest1",
+                "Region": "eu-west-1",
+                "TTL": 300,
+                "ResourceRecords": [
+                    {
+                        "Value": "127.0.0.4"
+                    }
+                ]
+            },
+            {
+                "Name": "latency.tivac.com.",
+                "Type": "A",
+                "SetIdentifier": "useast1",
+                "Region": "us-east-1",
+                "TTL": 300,
+                "ResourceRecords": [
+                    {
+                        "Value": "127.0.0.3"
+                    }
+                ]
+            },
+            {
+                "Name": "latency.tivac.com.",
+                "Type": "A",
+                "SetIdentifier": "uswest1",
+                "Region": "us-west-1",
+                "TTL": 300,
+                "ResourceRecords": [
+                    {
+                        "Value": "127.0.0.1"
+                    }
+                ]
+            },
+            {
+                "Name": "simple-a.tivac.com.",
+                "Type": "A",
+                "TTL": 300,
+                "ResourceRecords": [
+                    {
+                        "Value": "127.0.0.1"
+                    }
+                ]
+            },
+            {
+                "Name": "simple-b.tivac.com.",
+                "Type": "A",
+                "TTL": 300,
+                "ResourceRecords": [
+                    {
+                        "Value": "127.0.0.2"
+                    }
+                ]
+            },
+            {
+                "Name": "simple-c.tivac.com.",
+                "Type": "A",
+                "TTL": 300,
+                "ResourceRecords": [
+                    {
+                        "Value": "127.0.0.11"
+                    }
+                ]
+            },
+            {
+                "Name": "weighted.tivac.com.",
+                "Type": "A",
+                "SetIdentifier": "weight1",
+                "Weight": 1,
+                "TTL": 300,
+                "ResourceRecords": [
+                    {
+                        "Value": "127.0.0.5"
+                    }
+                ]
+            },
+            {
+                "Name": "weighted.tivac.com.",
+                "Type": "A",
+                "SetIdentifier": "weight10",
+                "Weight": 10,
+                "TTL": 300,
+                "ResourceRecords": [
+                    {
+                        "Value": "127.0.0.6"
+                    }
+                ]
+            },
+            {
+                "Name": "weighted.tivac.com.",
+                "Type": "A",
+                "SetIdentifier": "weight100",
+                "Weight": 100,
+                "TTL": 300,
+                "ResourceRecords": [
+                    {
+                        "Value": "127.0.0.7"
+                    }
+                ]
+            }
+        ]
+    }
+]

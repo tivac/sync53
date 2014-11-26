@@ -1,0 +1,65 @@
+{
+    "zones" : {
+        "tivac.com" : {
+            "ttl"     : "5 minutes",
+            "private" : false,
+            "records" : {
+                "tivac.com" : [
+                    {
+                        "type"    : "NS",
+                        "ttl"     : "2 days",
+                        "records" : [
+                            "ns-2035.awsdns-62.co.uk",
+                            "ns-706.awsdns-24.net",
+                            "ns-334.awsdns-41.com",
+                            "ns-1146.awsdns-15.org"
+                        ]
+                    },
+                    {
+                        "type"    : "SOA",
+                        "ttl"     : "15 minutes",
+                        "records" : "ns-1146.awsdns-15.org. awsdns-hostmaster.amazon.com. 2 7200 900 1209600 60"
+                    }
+                ],
+                "thing.1001.tivac.com" : {
+                    "type"  : "A",
+                    "alias" : {
+                        "id"     : "ZBE8V9999XI6L",
+                        "dns"    : "thing.tivac.com",
+                        "health" : false
+                    }
+                },
+                "thing.tivac.com" : [
+                    {
+                        "type"   : "A",
+                        "id"     : "DFW",
+                        "region" : "us-west-1",
+                        "alias"  : {
+                            "id"     : "ZBE8V9999XI6L",
+                            "dns"    : "thing-dfw.tivac.com",
+                            "health" : false
+                        }
+                    },
+                    {
+                        "type"   : "A",
+                        "id"     : "FRA",
+                        "region" : "eu-west-1",
+                        "alias"  : {
+                            "id"     : "ZBE8V9999XI6L",
+                            "dns"    : "thing-fra.tivac.com",
+                            "health" : false
+                        }
+                    }
+                ],
+                "thing-dfw.tivac.com." : {
+                    "type"    : "A",
+                    "records" : "127.0.0.40"
+                },
+                "thing-fra.tivac.com." : {
+                    "type"    : "A",
+                    "records" : "127.0.0.40"
+                }
+            }
+        }
+    }
+}
