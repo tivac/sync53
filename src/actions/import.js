@@ -5,10 +5,16 @@ var fs    = require("fs"),
     aws   = require("aws-sdk"),
     async = require("async");
 
+function stripTrailingSpace(name) {
+    return name.replace(/\.$/, "");
+}
+
 module.exports = function(env) {
     if(!env.secret || !env.key) {
         throw new Error("No AWS Key/Secret defined");
     }
+
+    env.zones = env.zones.map(stripTrailingSpace);
 
     async.waterfall([
         function setupAWS(done) {
@@ -59,6 +65,16 @@ module.exports = function(env) {
                 function(err) {
                     if(err) {
                         return done(err);
+                    }
+
+                    if(env.zones.length) {
+                        zones = zones.filter(function(zone) {
+                            var name = stripTrailingSpace(zone.Name);
+
+                            return env.zones.some(function(test) {
+                                return test === name;
+                            });
+                        });
                     }
 
                     data.zones = zones;
