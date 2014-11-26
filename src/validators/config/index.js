@@ -1,12 +1,8 @@
 "use strict";
 
-var joi    = require("joi"),
-    record = require("./record"),
-    lib    = require("../_lib");
+var joi  = require("joi"),
+    zone = require("./zone");
 
-// All keys are optional by default
 module.exports = joi.object().keys({
-    ttl     : lib.ttl,
-    private : joi.boolean(),
-    records : joi.array().includes(record).allowSingle()
+    zones : joi.object().pattern(/.+/, zone)
 });

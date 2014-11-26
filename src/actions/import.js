@@ -3,7 +3,10 @@
 var fs    = require("fs"),
     
     aws   = require("aws-sdk"),
-    async = require("async");
+    async = require("async"),
+    joi   = require("joi"),
+
+    schema = require("../validators/aws/");
 
 function stripTrailingSpace(name) {
     return name.replace(/\.$/, "");
@@ -120,7 +123,7 @@ module.exports = function(env) {
                                 return cb(err);
                             }
 
-                            zone.records = records;
+                            zone.Records = records;
 
                             cb(null, zone);
                         }
@@ -136,16 +139,20 @@ module.exports = function(env) {
                     done(null, data);
                 }
             );
+        },
+
+        function validateResults(data, done) {
+            joi.validate(data.zones, schema, done);
         }
-    ], function(err, data) {
+    ], function(err, zones) {
         if(err) {
             throw new Error(err);
         }
         
         if(env.output) {
-            fs.writeFileSync(env.output, JSON.stringify(data.zones, null, 4), "utf8");
+            fs.writeFileSync(env.output, JSON.stringify(zones, null, 4), "utf8");
         } else {
-            console.log(JSON.stringify(data.zones, null, 4));
+            console.log(JSON.stringify(zones, null, 4));
         }
     });
 };
