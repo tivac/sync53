@@ -22,5 +22,9 @@
     "async": "^0.9.0",
     "aws-sdk": "^2.0.28",
     "commander": "^2.5.0"
+  },
+  "repository" : {
+    "type" : "git",
+    "url" : "http://github.com/tivac/sync53.git"
   }
 }
