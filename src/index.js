@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 "use strict";
 
-// TODO: support creds from ENV as AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
-
 var program = require("commander"),
     access  = {
         key    : process.env.AWS_ACCESS_KEY_ID,
