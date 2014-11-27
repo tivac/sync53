@@ -5,20 +5,18 @@ var fs    = require("fs"),
     aws   = require("aws-sdk"),
     async = require("async"),
 
+    fqdn           = require("../fqdn"),
     validateAWS    = require("../validators/aws/"),
     validateConfig = require("../validators/config/"),
-    transform = require("../transformers/aws-to-config");
-
-function stripTrailingSpace(name) {
-    return name.replace(/\.$/, "");
-}
+    transform      = require("../transformers/aws-to-config");
 
 module.exports = function(env) {
     if(!env.secret || !env.key) {
         throw new Error("No AWS Key/Secret defined");
     }
 
-    env.zones = env.zones.map(stripTrailingSpace);
+    // Ensure that we compare against FQDN versions we get from R53
+    env.zones = env.zones.map(fqdn.add);
 
     async.waterfall([
         function setupAWS(done) {
@@ -73,10 +71,8 @@ module.exports = function(env) {
 
                     if(env.zones.length) {
                         zones = zones.filter(function(zone) {
-                            var name = stripTrailingSpace(zone.Name);
-
                             return env.zones.some(function(test) {
-                                return test === name;
+                                return test === zone.Name;
                             });
                         });
                     }

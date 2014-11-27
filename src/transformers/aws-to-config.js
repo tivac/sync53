@@ -1,8 +1,11 @@
 "use strict";
 
 var moment = require("moment"),
-    obj    = require("object-path");
+    obj    = require("object-path"),
 
+    fqdn   = require("../fqdn");
+
+// Ensure that moment creates easily-parseable times
 moment.locale("en", {
     relativeTime : {
         future : "%s",
@@ -46,7 +49,7 @@ module.exports = function(data, done) {
         assign(awsZone, "Config.PrivateZone", zone, "private");
 
         awsZone.Records.forEach(function(awsRecord) {
-            var name   = awsRecord.Name,
+            var name   = fqdn.remove(awsRecord.Name),
                 record = {
                     ttl  : moment.duration(awsRecord.TTL, "seconds").humanize(),
                     type : awsRecord.Type
@@ -99,7 +102,7 @@ module.exports = function(data, done) {
             zone.records[name] = record;
         });
 
-        config.zones[awsZone.Name] = zone;
+        config.zones[fqdn.remove(awsZone.Name)] = zone;
     });
 
     done(null, config);
