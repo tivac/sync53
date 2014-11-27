@@ -40,7 +40,7 @@ module.exports = function(data, done) {
     var config = {
             zones : {}
         };
-
+    
     data.forEach(function(awsZone) {
         var zone = {
                 records : {}

@@ -3,7 +3,6 @@
 var fs    = require("fs"),
     path  = require("path"),
     
-    aws   = require("aws-sdk"),
     async = require("async"),
 
     fqdn           = require("../fqdn"),
@@ -16,71 +15,16 @@ module.exports = function(env) {
     env.zones = env.zones.map(fqdn.add);
 
     async.waterfall([
-        function setupAWS(done) {
-            var data = {},
-                http = {};
-
-            if(env.proxy) {
-                http.proxy = env.proxy;
-            }
-
-            data.r53 = new aws.Route53({
-                accessKeyId     : env.key,
-                secretAccessKey : env.secret,
-                sslEnabled      : true,
-                logger          : env.verbose ? console : null,
-                httpOptions     : http
-            });
-
+        function setup(done) {
+            var data = {
+                    env : env
+                };
+            
             done(null, data);
         },
-
-        function getZones(data, done) {
-            var completed = false,
-                zones     = [],
-                marker;
-
-            async.until(
-                function() {
-                    return completed;
-                },
-                function listHostedZones(cb) {
-                    data.r53.listHostedZones({
-                        MaxItems : "5",
-                        Marker   : marker
-                    }, function(err, data) {
-                        if(err) {
-                            return cb(err);
-                        }
-
-                        zones = zones.concat(data.HostedZones);
-
-                        marker    = data.NextMarker;
-                        completed = !data.IsTruncated;
-
-                        cb();
-                    });
-                },
-                function(err) {
-                    if(err) {
-                        return done(err);
-                    }
-
-                    if(env.zones.length) {
-                        zones = zones.filter(function(zone) {
-                            return env.zones.some(function(test) {
-                                return test === zone.Name;
-                            });
-                        });
-                    }
-
-                    data.zones = zones;
-
-                    done(null, data);
-                }
-            );
-            
-        },
+        
+        require("./steps/setup-aws"),
+        require("./steps/get-zones"),
 
         function getZoneRecords(data, done) {
             async.map(
