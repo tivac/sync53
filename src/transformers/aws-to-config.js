@@ -41,7 +41,7 @@ module.exports = function(data, done) {
             zones : {}
         };
     
-    data.forEach(function(awsZone) {
+    data.aws.forEach(function(awsZone) {
         var zone = {
                 records : {}
             };
@@ -51,10 +51,14 @@ module.exports = function(data, done) {
         awsZone.Records.forEach(function(awsRecord) {
             var name   = fqdn.remove(awsRecord.Name),
                 record = {
-                    ttl  : moment.duration(awsRecord.TTL, "seconds").humanize(),
                     type : awsRecord.Type
                 };
-
+            
+            // TTL
+            if(awsRecord.TTL) {
+                record.ttl = moment.duration(awsRecord.TTL, "seconds").humanize();
+            }
+            
             // Sets
             assign(awsRecord, "SetIdentifier", record, "id");
 
@@ -65,7 +69,6 @@ module.exports = function(data, done) {
             assign(awsRecord, "Region", record, "region");
 
             // Alias
-            assign(awsRecord, "AliasTarget.HostedZoneId", record, "alias.id");
             assign(awsRecord, "AliasTarget.DNSName", record, "alias.dns");
             assign(awsRecord, "AliasTarget.EvaluateTargetHealth", record, "alias.health");
 
@@ -105,5 +108,7 @@ module.exports = function(data, done) {
         config.zones[fqdn.remove(awsZone.Name)] = zone;
     });
 
-    done(null, config);
+    data.config = config;
+
+    done(null, data);
 };

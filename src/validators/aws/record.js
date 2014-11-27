@@ -7,18 +7,22 @@ var joi = require("joi"),
 module.exports = joi.object({
     Name : lib.str,
     Type : lib.type,
-    TTL  : joi.number().integer(),
+        
     HealthCheckId : lib.str,
     ResourceRecords : joi.array().includes({
         Value : lib.str.required()
     }),
     
     // Alias
-    AliasTarget : joi.object().keys({
+    AliasTarget : {
         DNSName : lib.str.required(),
         EvaluateTargetHealth : joi.boolean().required(),
         HostedZoneId : lib.str.required()
-    }),
+    },
+    
+    // TTL cannot be set for Alias records
+    TTL : joi.number().integer()
+        .when("AliasTarget", { is : joi.exist(), then : joi.forbidden() }),
 
     // Required for any routing strategies
     SetIdentifier : lib.str
@@ -34,7 +38,7 @@ module.exports = joi.object({
     Failover : joi.string().valid([ "PRIMARY", "SECONDARY" ]),
     
     // Geolocation routing
-    GeoLocation : joi.object().keys({
+    GeoLocation : {
         ContinentCode : lib.continent,
         
         // Can't specify a country when continent is defined
@@ -44,7 +48,7 @@ module.exports = joi.object({
         // Can't specify an area when country isn't defined
         SubdivisionCode : lib.str
             .when("CountryCode",   { is : joi.exist(), otherwise : joi.forbidden() })
-    }),
+    },
 
     // Latency-based routing
     Region : lib.region

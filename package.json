@@ -2,6 +2,9 @@
   "name": "sync53",
   "version": "1.0.0",
   "description": "Sync a Route53 account with a local config",
+  "bin": {
+    "sync53" : "./bin/"
+  },
   "main": "./src/index.js",
   "scripts": {
     "test": "mocha"

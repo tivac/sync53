@@ -8,5 +8,11 @@ module.exports = function(data, done) {
             zones : joi.object().pattern(/.+/, zone)
         });
 
-    joi.validate(data, schema, done);
+    joi.validate(data.config, schema, function(err) {
+        if(err) {
+            return done(err);
+        }
+        
+        done(null, data);
+    });
 };
