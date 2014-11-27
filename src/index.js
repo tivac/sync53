@@ -37,6 +37,12 @@ function merge() {
     return result;
 }
 
+function creds(env) {
+    if(!env.secret || !env.key) {
+        throw new Error("No AWS Key/Secret defined");
+    }
+}
+
 program
     .version(require("../package.json").version)
     .option("-v, --verbose", "Verbose output")
@@ -50,19 +56,27 @@ program
     .description("Import DNS information from Route53")
     .option("-o, --output <file>", "Save imported config to a file")
     .action(function(zones, env) {
-        require("./actions/import")(merge(access, options(env.parent), options(env), {
+        env = merge(access, options(env.parent), options(env), {
             zones : zones
-        }));
+        });
+
+        creds(env);
+
+        require("./actions/import")(env);
     });
 
 program
     .command("export <file> [zones...]")
     .description("Write the config stored in file to Route53")
     .action(function(file, zones, env) {
-        require("./actions/export")(merge(access, options(env.parent), options(env), {
+        env = merge(access, options(env.parent), options(env), {
             file  : file,
             zones : zones
-        }));
+        });
+
+        creds(env);
+
+        require("./actions/export")(env);
     });
 
 program.parse(process.argv);

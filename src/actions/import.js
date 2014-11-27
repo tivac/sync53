@@ -11,10 +11,6 @@ var fs    = require("fs"),
     transform      = require("../transformers/aws-to-config");
 
 module.exports = function(env) {
-    if(!env.secret || !env.key) {
-        throw new Error("No AWS Key/Secret defined");
-    }
-
     // Ensure that we compare against FQDN versions we get from R53
     env.zones = env.zones.map(fqdn.add);
 
