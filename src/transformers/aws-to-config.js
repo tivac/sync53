@@ -69,7 +69,7 @@ module.exports = function(data, done) {
             // GeoLoc
             assign(awsRecord, "GeoLocation.ContinentCode", record, "location.continent");
             assign(awsRecord, "GeoLocation.CountryCode", record, "location.country");
-            assign(awsRecord, "GeoLocation.SubdivisionCode", record, "location.subdivision");
+            assign(awsRecord, "GeoLocation.SubdivisionCode", record, "location.area");
 
             if(awsRecord.ResourceRecords.length) {
                 record.records = awsRecord.ResourceRecords.map(function(rec) {

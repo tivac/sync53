@@ -141,7 +141,8 @@ module.exports = function(env) {
         },
 
         validateAWS,
-        transform
+        transform,
+        validateConfig,
     ], function(err, zones) {
         if(err) {
             throw new Error(err);

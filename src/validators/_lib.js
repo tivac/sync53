@@ -30,3 +30,13 @@ exports.region = joi.string().valid([
     "sa-east-1",
     "cn-north-1"
 ]);
+
+exports.continent = joi.string().valid([
+    "AF",
+    "AN",
+    "AS",
+    "EU",
+    "OC",
+    "NA",
+    "SA"
+]);

@@ -8,5 +8,8 @@ var joi    = require("joi"),
 module.exports = joi.object().keys({
     ttl     : lib.ttl,
     private : joi.boolean(),
-    records : joi.array().includes(record).allowSingle()
+    records : joi.object().pattern(/.+/, [
+        joi.array().includes(record),
+        record
+    ])
 });

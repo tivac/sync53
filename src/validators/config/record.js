@@ -5,14 +5,44 @@ var joi = require("joi"),
 
 // All keys are optional by default
 module.exports = joi.object().keys({
-    type    : joi.string().valid([ "SOA", "A", "TXT", "NS", "CNAME", "MX", "PTR", "SRV", "SPF", "AAAA" ]).required(),
-    id      : lib.str,
+    type    : lib.type,
     ttl     : lib.ttl,
-    records : joi.array().includes(lib.str).allowSingle(),
-    region  : lib.region,
-    alias   : joi.object().keys({
+    records : [
+        joi.array().includes(lib.str),
+        lib.str
+    ],
+
+    // Alias record
+    alias : joi.object().keys({
         id     : lib.str,
         dns    : lib.str,
         health : joi.boolean()
+    }),
+    
+    // ID for multiple records using some form of prioritization (weighted, latency, geo, failover)
+    id : lib.str
+        .when("region",   { is : joi.exist(), then : lib.str.required() })
+        .when("location", { is : joi.exist(), then : lib.str.required() })
+        .when("weight",   { is : joi.exist(), then : lib.str.required() }),
+    
+    // Latency routing
+    region  : lib.region,
+    
+    // Weight routing
+    weight : joi.number().integer(),
+    
+    // Geolocation routing
+    location : joi.object().keys({
+        continent : lib.continent,
+        
+        // Can't specify a country when continent is defined
+        country : lib.str
+            .when("continent", { is : joi.exist(), then : joi.forbidden() }),
+        
+        // Can't specify an area when country isn't defined
+        area : lib.str
+            .when("country",   { is : joi.exist(), otherwise : joi.forbidden() })
     })
+
+    // TODO: support failover routing
 });
