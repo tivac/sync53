@@ -1,6 +1,7 @@
 "use strict";
 
 var fs    = require("fs"),
+    path  = require("path"),
     
     aws   = require("aws-sdk"),
     async = require("async"),
@@ -141,7 +142,11 @@ module.exports = function(env) {
         }
         
         if(env.output) {
-            fs.writeFileSync(env.output, JSON.stringify(zones, null, 4), "utf8");
+            fs.writeFileSync(
+                path.resolve(process.cwd(), env.output),
+                JSON.stringify(zones, null, 4),
+                "utf8"
+            );
         } else {
             console.log(JSON.stringify(zones, null, 4));
         }
