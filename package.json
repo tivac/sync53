@@ -24,7 +24,8 @@
     "commander": "^2.5.0",
     "joi": "^4.9.0",
     "moment": "^2.8.4",
-    "object-path": "^0.8.1"
+    "object-path": "^0.8.1",
+    "strip-json-comments": "^1.0.2"
   },
   "repository": {
     "type": "git",
