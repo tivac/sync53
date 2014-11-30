@@ -48,7 +48,7 @@ program
 
         creds(env);
 
-        require("../src/actions/import")(env);
+        require("../src/commands/import")(env);
     });
 
 program
@@ -59,7 +59,7 @@ program
             file  : file
         });
 
-        require("../src/actions/check")(env, function(err, result) {
+        require("../src/commands/check")(env, function(err, result) {
             if(err) {
                 console.error(err.stack);
                 process.exit(1);
@@ -82,7 +82,7 @@ program
 
         creds(env);
 
-        require("../src/actions/diff")(env);
+        require("../src/commands/diff")(env);
     });
 
 program
@@ -96,7 +96,7 @@ program
 
         creds(env);
 
-        require("../src/actions/commit")(env);
+        require("../src/commands/commit")(env);
     });
     
 // Show help if unknown command entered

@@ -1,7 +1,9 @@
 "use strict";
 
-exports.import = require("./actions/import");
-exports.export = require("./actions/export");
+exports.import = require("./commands/import");
+exports.check  = require("./commands/check");
+exports.diff   = require("./commands/diff");
+exports.commit = require("./commands/commit");
 
 exports.validators = {
     aws    : require("./validators/aws"),
