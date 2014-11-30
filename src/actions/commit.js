@@ -1,37 +1,24 @@
 "use strict";
 
-var fs    = require("fs"),
-    path  = require("path"),
-    
-    async = require("async"),
-    strip = require("strip-json-comments");
+var async = require("async");
 
-module.exports = function(env) {
-    var file = path.resolve(process.cwd(), env.file),
-        config;
-
-    if(!fs.existsSync(file)) {
-        throw new Error("Invalid config file path: " + file);
-    }
-
-    config = fs.readFileSync(file, "utf8");
-    config = JSON.parse(strip(config));
-
+module.exports = function commitToAws(env) {
     async.waterfall([
         function setup(done) {
             var data = {
-                    env    : env,
-                    config : config
+                    env : env
                 };
             
             done(null, data);
         },
         
+        require("./steps/read-config"),
+        
         require("../validators/config/"),
         
         require("./steps/setup-aws"),
         require("./steps/get-zones"),
-
+        
         require("../transformers/config-to-aws"),
         
         // Ensure that aliases come last, in case they depend on records earlier in the batch
