@@ -4,21 +4,11 @@ var async = require("async");
 
 module.exports = function commitToAws(env) {
     async.waterfall([
-        function setup(done) {
-            var data = {
-                    env : env
-                };
-            
-            done(null, data);
-        },
-        
+        require("./steps/setup-env")(env),
         require("./steps/read-config"),
-        
         require("../validators/config/"),
-        
         require("./steps/setup-aws"),
         require("./steps/get-zones"),
-        
         require("../transformers/config-to-aws"),
         
         // Ensure that aliases come last, in case they depend on records earlier in the batch

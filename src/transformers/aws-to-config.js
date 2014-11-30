@@ -26,11 +26,15 @@ moment.locale("en", {
 });
 
 /*jshint maxparams:4 */
-function assign(src, srcPath, tgt, tgtPath) {
+function assign(src, srcPath, tgt, tgtPath, fn) {
     var val = obj.get(src, srcPath);
 
     if(!val) {
         return;
+    }
+    
+    if(typeof fn === "function") {
+        val = fn(val);
     }
 
     obj.set(tgt, tgtPath, val);
@@ -69,7 +73,7 @@ module.exports = function(data, done) {
             assign(awsRecord, "Region", record, "region");
 
             // Alias
-            assign(awsRecord, "AliasTarget.DNSName", record, "alias.dns");
+            assign(awsRecord, "AliasTarget.DNSName", record, "alias.dns", fqdn.remove);
             assign(awsRecord, "AliasTarget.EvaluateTargetHealth", record, "alias.health");
 
             // GeoLoc
