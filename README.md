@@ -31,10 +31,9 @@ If you define the `AWS_ACCESS_KEY_ID` &
 
 ## TODO
 
-1. Add a `check` command to validate a local config file
-2. Add a `cleanup` command to tell you which R53 records you should delete.
+1. Add a `cleanup` command to tell you which R53 records you should delete.
     - It will **not** automatically delete records (as a precaution).
-3. Add a `--preview` option to preview changes that would be written in an `export` operation
+2. Add a `--preview` option to preview changes that would be written in an `export` operation
 
 ## License
 ```
