@@ -52,20 +52,6 @@ program
     });
 
 program
-    .command("export <file> [zones...]")
-    .description("Write the config stored in <file> to Route53")
-    .action(function(file, zones, env) {
-        env = merge(access, env.parent, env, {
-            file  : file,
-            zones : zones
-        });
-
-        creds(env);
-
-        require("../src/actions/export")(env);
-    });
-
-program
     .command("check <file>")
     .description("Validate the config in <file>")
     .action(function(file, env) {
@@ -84,5 +70,20 @@ program
             }
         });
     });
+
+program
+    .command("commit <file> [zones...]")
+    .description("Commit local config stored in <file> to Route53")
+    .action(function(file, zones, env) {
+        env = merge(access, env.parent, env, {
+            file  : file,
+            zones : zones
+        });
+
+        creds(env);
+
+        require("../src/actions/commit")(env);
+    });
+
 
 program.parse(process.argv);
