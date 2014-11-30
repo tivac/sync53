@@ -5,7 +5,7 @@ var fs    = require("fs"),
     
     async = require("async"),
 
-    fqdn           = require("../fqdn");
+    fqdn  = require("../fqdn");
 
 module.exports = function(env) {
     // Ensure that we compare against FQDN versions we get from R53
