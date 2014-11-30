@@ -72,6 +72,20 @@ program
     });
 
 program
+    .command("diff <file> [zones...]")
+    .description("Diff local config stored in <file> to current Route53 config")
+    .action(function(file, zones, env) {
+        env = merge(access, env.parent, env, {
+            file  : file,
+            zones : zones
+        });
+
+        creds(env);
+
+        require("../src/actions/diff")(env);
+    });
+
+program
     .command("commit <file> [zones...]")
     .description("Commit local config stored in <file> to Route53")
     .action(function(file, zones, env) {
@@ -84,6 +98,16 @@ program
 
         require("../src/actions/commit")(env);
     });
-
+    
+// Show help if unknown command entered
+program
+    .on("*", function() {
+        program.help();
+    });
 
 program.parse(process.argv);
+
+// Show help when nothing is entered
+if(!program.args.length) {
+    program.help();
+}

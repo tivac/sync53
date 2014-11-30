@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Sync a Route53 account with a local config",
   "bin": {
-    "sync53" : "./bin/"
+    "sync53": "./bin/"
   },
   "main": "./src/index.js",
   "scripts": {
@@ -24,7 +24,9 @@
   "dependencies": {
     "async": "^0.9.0",
     "aws-sdk": "^2.0.28",
+    "chalk": "^0.5.1",
     "commander": "^2.5.0",
+    "diff": "^1.2.0",
     "joi": "^4.9.0",
     "moment": "^2.8.4",
     "object-path": "^0.8.1",
