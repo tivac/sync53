@@ -3,9 +3,14 @@
 var joi  = require("joi"),
     zone = require("./zone");
 
-// All keys are optional by default
 module.exports = function(data, done) {
     var schema = joi.array().includes(zone);
 
-    joi.validate(data, schema, done);
+    joi.validate(data.aws, schema, function(err) {
+        if(err) {
+            return done(err);
+        }
+        
+        done(null, data);
+    });
 };

@@ -1,18 +1,16 @@
 "use strict";
 
 var joi    = require("joi"),
-    record = require("./record"),
-    lib    = require("../_lib");
+    record = require("./record");
 
 // All keys are optional by default
-module.exports = joi.object().keys({
-    Id : joi.string().regex(/\/hostedzone\/.+/),
-    Name : lib.str,
-    CallerReference : lib.str,
-    Config : joi.object().keys({
+module.exports = {
+    HostedZoneId : joi.string().regex(/\/hostedzone\/.+/),
+    ChangeBatch : {
         Comment : joi.string(),
-        PrivateZone : joi.boolean()
-    }),
-    ResourceRecordSetCount : joi.number().integer(),
-    Records : joi.array().includes(record)
-});
+        Changes : joi.array().includes({
+            Action : joi.string().valid([ "CREATE", "DELETE", "UPSERT" ]),
+            ResourceRecordSet : record
+        })
+    }
+};

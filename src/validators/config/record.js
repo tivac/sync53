@@ -6,18 +6,21 @@ var joi = require("joi"),
 // All keys are optional by default
 module.exports = joi.object().keys({
     type    : lib.type,
-    ttl     : lib.ttl,
     records : [
         joi.array().includes(lib.str),
         lib.str
     ],
-
+    
     // Alias record
     alias : joi.object().keys({
         id     : lib.str,
         dns    : lib.str,
         health : joi.boolean()
     }),
+    
+    // TTL cannot be set for Alias records
+    ttl : lib.ttl
+        .when("alias", { is : joi.exist(), then : joi.forbidden() }),
     
     // ID for multiple records using some form of prioritization (weighted, latency, geo, failover)
     id : lib.str
