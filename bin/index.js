@@ -40,7 +40,7 @@ program
 program
     .command("import [zones...]")
     .description("Import DNS information from Route53")
-    .option("-o, --output <file>", "Save imported config to a file")
+    .option("-o, --output <file>", "Save imported config to <file>")
     .action(function(zones, env) {
         env = merge(access, env.parent, env, {
             zones : zones
@@ -53,7 +53,7 @@ program
 
 program
     .command("export <file> [zones...]")
-    .description("Write the config stored in file to Route53")
+    .description("Write the config stored in <file> to Route53")
     .action(function(file, zones, env) {
         env = merge(access, env.parent, env, {
             file  : file,
@@ -63,6 +63,26 @@ program
         creds(env);
 
         require("../src/actions/export")(env);
+    });
+
+program
+    .command("check <file>")
+    .description("Validate the config in <file>")
+    .action(function(file, env) {
+        env = merge(access, env.parent, env, {
+            file  : file
+        });
+
+        require("../src/actions/check")(env, function(err, result) {
+            if(err) {
+                console.error(err.stack);
+                process.exit(1);
+            }
+            
+            if(env.verbose) {
+                console.log(require("util").inspect(result, { depth : null }));
+            }
+        });
     });
 
 program.parse(process.argv);
