@@ -6,22 +6,25 @@ Update Route53 the right way, with a text config file that you can version.
 ## Usage
 
 ```
-  Usage: sync53 [options] [command]
+ Usage: sync53 [options] [command]
 
-  Commands:
+ Commands:
 
-    import [options] [zones...]  Import DNS information from Route53
-    export <file> [zones...]     Write the config stored in file to Route53
+   import [options] [zones...]  Import DNS information from Route53
+   check <file>                 Validate the config in <file>
+   diff <file> [zones...]       Diff local config stored in <file> to current Route53 config
+   commit <file> [zones...]     Commit local config stored in <file> to Route53
 
-  Options:
+ Options:
 
-    -h, --help             output usage information
-    -V, --version          output the version number
-    -v, --verbose          Verbose output
-    --silent               Silent output (only errors)
-    --proxy <proxy>        URL to proxy requests through
-    -k, --key <key>        AWS Access Key
-    -s, --secret <secret>  AWS Secret
+   -h, --help             output usage information
+   -V, --version          output the version number
+   -v, --verbose          Verbose output
+   --silent               Silent output (only errors)
+   --proxy <proxy>        URL to proxy requests through
+   -k, --key <key>        AWS Access Key
+   -s, --secret <secret>  AWS Secret
+
 ```
 
 If you define the `AWS_ACCESS_KEY_ID` &
@@ -33,7 +36,6 @@ If you define the `AWS_ACCESS_KEY_ID` &
 
 1. Add a `cleanup` command to tell you which R53 records you should delete.
     - It will **not** automatically delete records (as a precaution).
-2. Add a `--preview` option to preview changes that would be written in an `export` operation
 
 ## License
 ```
