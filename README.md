@@ -1,8 +1,14 @@
-sync53
+[sync53](http://sync53.com/)
 ======
 [![Dependency Status](https://david-dm.org/tivac/sync53.svg)](https://david-dm.org/tivac/sync53) [![npm version](https://badge.fury.io/js/sync53.svg)](http://badge.fury.io/js/sync53)
 ---
 Update Route53 the right way, with a text config file that you can version.
+
+## Install
+
+```
+npm install -g sync53
+```
 
 ## Usage
 
