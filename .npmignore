@@ -1,3 +1,4 @@
 .jshint*
 .editorconfig
 examples
+dns.json
