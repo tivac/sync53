@@ -63,7 +63,8 @@ module.exports = function(config, zones) {
                     change = {
                         Action : "UPSERT",
                         ResourceRecordSet : record
-                    };
+                    },
+                    alias;
                 
                 record.Name = domain;
                 record.Type = config.type;
@@ -96,10 +97,12 @@ module.exports = function(config, zones) {
                 
                 // Alias (exits early, since it has no resource records to iterate)
                 if(config.alias) {
+                    alias = typeof config.alias === "string" ? { dns : config.alias } : config.alias;
+                    
                     record.AliasTarget = {
-                        DNSName : config.alias.dns,
-                        HostedZoneId : findZone(zones, config.alias.dns).Id.replace("/hostedzone/", ""),
-                        EvaluateTargetHealth : !!config.alias.health
+                        DNSName : alias.dns,
+                        HostedZoneId : findZone(zones, alias.dns).Id.replace("/hostedzone/", ""),
+                        EvaluateTargetHealth : !!alias.health
                     };
                     
                     return params.ChangeBatch.Changes.push(change);

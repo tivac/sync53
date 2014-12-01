@@ -73,8 +73,14 @@ module.exports = function(aws) {
             assign(awsRecord, "Region", record, "region");
 
             // Alias
-            assign(awsRecord, "AliasTarget.DNSName", record, "alias.dns", fqdn.remove);
-            assign(awsRecord, "AliasTarget.EvaluateTargetHealth", record, "alias.health");
+            if(awsRecord.AliasTarget) {
+                if(obj.get(awsRecord, "AliasTarget.EvaluateTargetHealth")) {
+                    assign(awsRecord, "AliasTarget.DNSName", record, "alias.dns", fqdn.remove);
+                    assign(awsRecord, "AliasTarget.EvaluateTargetHealth", record, "alias.health");
+                } else {
+                    record.alias = awsRecord.AliasTarget.DNSName;
+                }
+            }
 
             // GeoLoc
             assign(awsRecord, "GeoLocation.ContinentCode", record, "location.continent");
