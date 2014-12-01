@@ -38,7 +38,7 @@ program
     .option("-s, --secret <secret>", "AWS Secret");
 
 program
-    .command("import [zones...]")
+    .command("import [<zones>...]")
     .description("Import DNS information from Route53")
     .option("-o, --output <file>", "Save imported config to <file>")
     .action(function(zones, env) {
@@ -72,7 +72,7 @@ program
     });
 
 program
-    .command("diff <file> [zones...]")
+    .command("diff <file> [<zones>...]")
     .description("Diff local config stored in <file> to current Route53 config")
     .action(function(file, zones, env) {
         env = merge(access, env.parent, env, {
@@ -98,7 +98,21 @@ program
 
         require("../src/commands/commit")(env);
     });
-    
+
+program
+    .command("clean <file> [<zones>...]")
+    .description("Display a list of stale records in Route53")
+    .action(function(file, zones, env) {
+        env = merge(access, env.parent, env, {
+            file  : file,
+            zones : zones
+        });
+
+        creds(env);
+
+        require("../src/commands/clean")(env);
+    });
+
 // Show help if unknown command entered
 program
     .on("*", function() {

@@ -14,6 +14,7 @@ Update Route53 the right way, with a text config file that you can version.
    check <file>                 Validate the config in <file>
    diff <file> [zones...]       Diff local config stored in <file> to current Route53 config
    commit <file> [zones...]     Commit local config stored in <file> to Route53
+   clean <file> [<zones>...]      Display a list of stale records in Route53
 
  Options:
 
@@ -31,11 +32,6 @@ If you define the `AWS_ACCESS_KEY_ID` &
 `AWS_SECRET_ACCESS_KEY` in your environment you won't need to constantly specify them on the CLI.
 
 `zones...` is available to optionally filter the zones being imported/exported, it does exact matching for now.
-
-## TODO
-
-1. Add a `cleanup` command to tell you which R53 records you should delete.
-    - It will **not** automatically delete records (as a precaution).
 
 ## License
 ```
