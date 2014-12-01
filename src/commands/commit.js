@@ -9,11 +9,17 @@ module.exports = function commitToAws(env) {
         require("../validators/config/"),
         require("./steps/setup-aws"),
         require("./steps/get-zones"),
-        require("../transformers/config-to-aws"),
+        function convertConfig(data, done) {
+            var changes = require("../transformers/config-to-aws")(data.config, data.zones);
+            
+            data.changes = changes;
+            
+            done(null, data);
+        },
         
         // Ensure that aliases come last, in case they depend on records earlier in the batch
         function aliasesLast(data, done) {
-            data.aws.forEach(function(changes) {
+            data.changes.forEach(function(changes) {
                 var aliases = [];
                 
                 changes.ChangeBatch.Changes = changes.ChangeBatch.Changes.filter(function(change) {
@@ -36,7 +42,7 @@ module.exports = function commitToAws(env) {
         
         function changeResourceRecordSets(data, done) {
             async.each(
-                data.aws,
+                data.changes,
                 function(change, cb) {
                     console.log(JSON.stringify(change, null, 4));
                     data.r53.changeResourceRecordSets(change, function(err, data) {

@@ -13,20 +13,10 @@ module.exports = function(env) {
         require("./steps/get-zones"),
         require("./steps/get-records"),
         function awsToObject(data, done) {
-            var conf = {
-                    aws : data.aws
-                };
+            data.local  = data.config;
+            data.remote = require("../transformers/aws-to-config")(data.aws);
             
-            require("../transformers/aws-to-config")(conf, function(err, conf) {
-                if(err) {
-                    return done(err);
-                }
-                
-                data.remote = conf.config;
-                data.local  = data.config;
-                
-                done(null, data);
-            });
+            done(null, data);
         },
         
         function compare(data, done) {

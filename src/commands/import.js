@@ -23,7 +23,12 @@ module.exports = function(env) {
         require("./steps/setup-aws"),
         require("./steps/get-zones"),
         require("./steps/get-records"),
-        require("../transformers/aws-to-config"),
+        function(data, done) {
+            data.config = require("../transformers/aws-to-config")(data.aws);
+            
+            done(null, data);
+        },
+        
         require("../validators/config/")
         
     ], function(err, data) {

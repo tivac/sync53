@@ -39,11 +39,11 @@ function findZone(zones, name) {
     return item;
 }
 
-module.exports = function(data, done) {
+module.exports = function(config, zones) {
     var changes = [];
     
-    each(data.config.zones, function(zone, dns) {
-        var aws = findZone(data.zones, dns),
+    each(config.zones, function(zone, dns) {
+        var aws = findZone(zones, dns),
             params = {
                 HostedZoneId : aws.Id,
                 ChangeBatch : {
@@ -98,7 +98,7 @@ module.exports = function(data, done) {
                 if(config.alias) {
                     record.AliasTarget = {
                         DNSName : config.alias.dns,
-                        HostedZoneId : findZone(data.zones, config.alias.dns).Id.replace("/hostedzone/", ""),
+                        HostedZoneId : findZone(zones, config.alias.dns).Id.replace("/hostedzone/", ""),
                         EvaluateTargetHealth : !!config.alias.health
                     };
                     
@@ -121,7 +121,5 @@ module.exports = function(data, done) {
         changes.push(params);
     });
 
-    data.aws = changes;
-
-    done(null, data);
+    return changes;
 };

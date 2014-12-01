@@ -40,12 +40,12 @@ function assign(src, srcPath, tgt, tgtPath, fn) {
     obj.set(tgt, tgtPath, val);
 }
 
-module.exports = function(data, done) {
+module.exports = function(aws) {
     var config = {
             zones : {}
         };
     
-    data.aws.forEach(function(awsZone) {
+    aws.forEach(function(awsZone) {
         var zone = {
                 records : {}
             };
@@ -112,7 +112,5 @@ module.exports = function(data, done) {
         config.zones[fqdn.remove(awsZone.Name)] = zone;
     });
 
-    data.config = config;
-
-    done(null, data);
+    return config;
 };
