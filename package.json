@@ -7,7 +7,8 @@
   },
   "main": "./src/index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "istanbul cover node_modules/mocha/bin/_mocha",
+    "mocha": "mocha"
   },
   "keywords": [
     "route53",
