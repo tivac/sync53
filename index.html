@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Sync53 by tivac</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/tivac/sync53">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/tivac/sync53/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/tivac/sync53/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Sync53</h1>
+          <p>A better way to configure Route53</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/tivac">tivac</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <p>Update Route53 the right way, with a text config file that you can version. Use your existing revision control &amp; user permissions, then let the tool convert your human-understandable config into all the right AWS jargon.</p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<pre><code> Usage: sync53 [options] [command]
+
+ Commands:
+
+   import [options] [zones...]  Import DNS information from Route53
+   check &lt;file&gt;                 Validate the config in &lt;file&gt;
+   diff &lt;file&gt; [zones...]       Diff local config stored in &lt;file&gt; to current Route53 config
+   commit &lt;file&gt; [zones...]     Commit local config stored in &lt;file&gt; to Route53
+   clean &lt;file&gt; [&lt;zones&gt;...]      Display a list of stale records in Route53
+
+ Options:
+
+   -h, --help             output usage information
+   -V, --version          output the version number
+   -v, --verbose          Verbose output
+   --silent               Silent output (only errors)
+   --proxy &lt;proxy&gt;        URL to proxy requests through
+   -k, --key &lt;key&gt;        AWS Access Key
+   -s, --secret &lt;secret&gt;  AWS Secret
+
+</code></pre>
+
+<p>If you define the <code>AWS_ACCESS_KEY_ID</code> &amp;
+<code>AWS_SECRET_ACCESS_KEY</code> in your environment you won't need to constantly specify them on the CLI.</p>
+
+<p><code>zones...</code> is available to optionally filter the zones being imported/exported, it does exact matching for now.</p>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+
+<pre><code>The MIT License (MIT)
+
+Copyright (c) 2014 Patrick Cavit
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+</code></pre>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
