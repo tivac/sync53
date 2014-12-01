@@ -12,11 +12,14 @@ module.exports = joi.object().keys({
     ],
     
     // Alias record
-    alias : joi.object().keys({
-        id     : lib.str,
-        dns    : lib.str,
-        health : joi.boolean()
-    }),
+    alias : joi.alternatives().try(
+        joi.object().keys({
+            id     : lib.str,
+            dns    : lib.str,
+            health : joi.boolean()
+        }),
+        lib.str
+    ),
     
     // TTL cannot be set for Alias records
     ttl : lib.ttl
