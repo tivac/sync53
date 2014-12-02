@@ -9,7 +9,7 @@ module.exports = function(env) {
         require("./steps/setup-env")(env),
         require("./steps/setup-aws"),
         require("./steps/read-config"),
-        require("../validators/config/"),
+        require("./steps/validate-config"),
         require("./steps/get-zones"),
         require("./steps/get-records"),
         function awsToObject(data, done) {

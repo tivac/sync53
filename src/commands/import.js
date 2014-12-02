@@ -30,7 +30,7 @@ module.exports = function(env) {
             done(null, data);
         },
         
-        require("../validators/config/")
+        require("./steps/validate-config")
         
     ], function(err, data) {
         var dest;

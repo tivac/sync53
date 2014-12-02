@@ -1,12 +1,13 @@
 "use strict";
 
-var async = require("async");
+var async = require("async"),
+    joi   = require("joi");
 
 module.exports = function commitToAws(env) {
     async.waterfall([
         require("./steps/setup-env")(env),
         require("./steps/read-config"),
-        require("../validators/config/"),
+        require("./steps/validate-config"),
         require("./steps/setup-aws"),
         require("./steps/get-zones"),
         function convertConfig(data, done) {
@@ -38,7 +39,17 @@ module.exports = function commitToAws(env) {
             done(null, data);
         },
         
-        require("../validators/aws/"),
+        function validateAws(data, done) {
+            var schema = require("../validators/aws/");
+
+            joi.validate(data.aws, schema, function(err) {
+                if(err) {
+                    return done(err);
+                }
+                
+                done(null, data);
+            });
+        },
         
         function changeResourceRecordSets(data, done) {
             async.each(
