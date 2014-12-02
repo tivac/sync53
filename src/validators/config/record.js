@@ -6,10 +6,7 @@ var joi = require("joi"),
 // All keys are optional by default
 module.exports = joi.object().keys({
     type    : lib.type,
-    records : [
-        joi.array().includes(lib.str),
-        lib.str
-    ],
+    records : joi.array().includes(lib.str).single(),
     
     // Alias record
     alias : joi.alternatives().try(
