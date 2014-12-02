@@ -40,6 +40,36 @@ function assign(src, srcPath, tgt, tgtPath, fn) {
     obj.set(tgt, tgtPath, val);
 }
 
+function preferredTTL(zone, ttls) {
+    var best;
+    
+    Object.keys(ttls).forEach(function(ttl) {
+        if(ttls[ttl] > (ttls[best] || 0)) {
+            best = ttl;
+        }
+    });
+    
+    zone.ttl = best;
+    
+    Object.keys(zone.records).forEach(function(dns) {
+        if(Array.isArray(zone.records[dns])) {
+            return zone.records[dns] = zone.records[dns].map(function(record) {
+                if(record.ttl && record.ttl === best) {
+                    delete record.ttl;
+                }
+                
+                return record;
+            });
+        }
+        
+        if(zone.records[dns].ttl && zone.records[dns].ttl === best) {
+            delete zone.records[dns].ttl;
+        }
+    });
+    
+    return zone;
+}
+
 module.exports = function(aws) {
     var config = {
             zones : {}
@@ -47,8 +77,10 @@ module.exports = function(aws) {
     
     aws.forEach(function(awsZone) {
         var zone = {
+                ttl : "",
                 records : {}
-            };
+            },
+            ttls = {};
 
         assign(awsZone, "Config.PrivateZone", zone, "private");
 
@@ -61,6 +93,12 @@ module.exports = function(aws) {
             // TTL
             if(awsRecord.TTL) {
                 record.ttl = moment.duration(awsRecord.TTL, "seconds").humanize();
+                
+                if(!ttls[record.ttl]) {
+                    ttls[record.ttl] = 0;
+                }
+                
+                ttls[record.ttl]++;
             }
             
             // Sets
@@ -114,7 +152,9 @@ module.exports = function(aws) {
             // Simple assignment
             zone.records[name] = record;
         });
-
+        
+        zone = preferredTTL(zone, ttls);
+        
         config.zones[fqdn.remove(awsZone.Name)] = zone;
     });
 
