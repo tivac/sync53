@@ -13,25 +13,25 @@ npm install -g sync53
 ## Usage
 
 ```
- Usage: sync53 [options] [command]
+  Usage: sync53 [options] [command]
 
- Commands:
+  Commands:
 
-   import [options] [zones...]  Import DNS information from Route53
-   check <file>                 Validate the config in <file>
-   diff <file> [zones...]       Diff local config stored in <file> to current Route53 config
-   commit <file> [zones...]     Commit local config stored in <file> to Route53
-   clean <file> [<zones>...]      Display a list of stale records in Route53
+    import [options] [<zones>...]  Import DNS information from Route53
+    check <config>                 Validate <config>
+    diff <config> [<zones>...]     Diff current Route53 settings against <config>
+    commit <config> [zones...]     Commit <config> to Route53
+    clean <config> [<zones>...]    Compare <config> to Route53 & show stale records
 
- Options:
+  Options:
 
-   -h, --help             output usage information
-   -V, --version          output the version number
-   -v, --verbose          Verbose output
-   --silent               Silent output (only errors)
-   --proxy <proxy>        URL to proxy requests through
-   -k, --key <key>        AWS Access Key
-   -s, --secret <secret>  AWS Secret
+    -h, --help             output usage information
+    -V, --version          output the version number
+    -v, --verbose          Verbose output
+    --silent               Silent output (only errors)
+    --proxy <proxy>        URL to proxy requests through
+    -k, --key <key>        AWS Access Key
+    -s, --secret <secret>  AWS Secret
 
 ```
 

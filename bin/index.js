@@ -40,7 +40,8 @@ program
 program
     .command("import [<zones>...]")
     .description("Import DNS information from Route53")
-    .option("-o, --output <file>", "Save imported config to <file>")
+    .option("-o, --output <path>", "Save imported config to <path>")
+    .option("-m, --multiple", "Save each zone as its own file")
     .action(function(zones, env) {
         env = merge(access, env.parent, env, {
             zones : zones
@@ -52,11 +53,11 @@ program
     });
 
 program
-    .command("check <file>")
-    .description("Validate the config in <file>")
-    .action(function(file, env) {
+    .command("check <config>")
+    .description("Validate <config>")
+    .action(function(config, env) {
         env = merge(access, env.parent, env, {
-            file  : file
+            config : config
         });
 
         require("../src/commands/check")(env, function(err, result) {
@@ -72,12 +73,12 @@ program
     });
 
 program
-    .command("diff <file> [<zones>...]")
-    .description("Diff local config stored in <file> to current Route53 config")
-    .action(function(file, zones, env) {
+    .command("diff <config> [<zones>...]")
+    .description("Diff current Route53 settings against <config>")
+    .action(function(config, zones, env) {
         env = merge(access, env.parent, env, {
-            file  : file,
-            zones : zones
+            config : config,
+            zones  : zones
         });
 
         creds(env);
@@ -86,12 +87,12 @@ program
     });
 
 program
-    .command("commit <file> [zones...]")
-    .description("Commit local config stored in <file> to Route53")
-    .action(function(file, zones, env) {
+    .command("commit <config> [zones...]")
+    .description("Commit <config> to Route53")
+    .action(function(config, zones, env) {
         env = merge(access, env.parent, env, {
-            file  : file,
-            zones : zones
+            config : config,
+            zones  : zones
         });
 
         creds(env);
@@ -100,12 +101,12 @@ program
     });
 
 program
-    .command("clean <file> [<zones>...]")
-    .description("Display a list of stale records in Route53")
-    .action(function(file, zones, env) {
+    .command("clean <config> [<zones>...]")
+    .description("Compare <config> to Route53 & show stale records")
+    .action(function(config, zones, env) {
         env = merge(access, env.parent, env, {
-            file  : file,
-            zones : zones
+            config : config,
+            zones  : zones
         });
 
         creds(env);
