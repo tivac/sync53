@@ -5,8 +5,7 @@ var async = require("async");
 module.exports = function(env, done) {
     async.waterfall([
         require("./steps/setup-env")(env),
-        require("./steps/read-config"),
-        require("./steps/validate-config/")
+        require("./steps/read-config")
     ], function(err, result) {
         if(err) {
             return done(new Error(err));

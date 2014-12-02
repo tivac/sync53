@@ -5,32 +5,37 @@ var fs    = require("fs"),
     
     async = require("async"),
     shell = require("shelljs"),
+    joi   = require("joi"),
 
-    fqdn  = require("../fqdn");
+    fqdn  = require("../fqdn"),
+    
+    schema = require("../validators/config");
 
 module.exports = function(env) {
     // Ensure that we compare against FQDN versions we get from R53
     env.zones = env.zones.map(fqdn.add);
 
     async.waterfall([
-        function setup(done) {
-            var data = {
-                    env : env
-                };
-            
-            done(null, data);
-        },
-        
+        require("./steps/setup-env")(env),
         require("./steps/setup-aws"),
         require("./steps/get-zones"),
         require("./steps/get-records"),
-        function(data, done) {
+        
+        function transformConfig(data, done) {
             data.config = require("../transformers/aws-to-config")(data.aws);
             
             done(null, data);
         },
         
-        require("./steps/validate-config")
+        function validateConfig(data, done) {
+            joi.validate(data.config, schema, function(err) {
+                if(err) {
+                    return done(err);
+                }
+                
+                done(null, data);
+            });
+        }
         
     ], function(err, data) {
         var dest;
