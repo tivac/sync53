@@ -3,8 +3,11 @@
 var path = require("path"),
     fs   = require("fs"),
     
+    joi   = require("joi"),
     shell = require("shelljs"),
     strip = require("strip-json-comments"),
+    
+    schema = require("../../validators/config"),
 
     extRegex = /\.json$/i;
 
@@ -51,5 +54,13 @@ module.exports = function readConfig(data, done) {
             });
     }
     
-    done(null, data);
+    joi.validate(data.config, schema, function(err) {
+        if(err) {
+            return done(err.details.map(function(detail) {
+                return "Invalid: " + detail.message + " (" + detail.path + ")";
+            }).join(" "));
+        }
+        
+        done(null, data);
+    });
 };

@@ -7,7 +7,6 @@ module.exports = function commitToAws(env) {
     async.waterfall([
         require("./steps/setup-env")(env),
         require("./steps/read-config"),
-        require("./steps/validate-config"),
         require("./steps/setup-aws"),
         require("./steps/get-zones"),
         function convertConfig(data, done) {
