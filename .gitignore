@@ -26,6 +26,7 @@ node_modules
 
 # App files
 dns.json
+configs
 
 # Users Environment Variables
 .lock-wscript
@@ -42,7 +43,8 @@ dns.json
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*

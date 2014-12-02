@@ -4,6 +4,7 @@ var fs    = require("fs"),
     path  = require("path"),
     
     async = require("async"),
+    shell = require("shelljs"),
 
     fqdn  = require("../fqdn");
 
@@ -32,18 +33,41 @@ module.exports = function(env) {
         require("../validators/config/")
         
     ], function(err, data) {
+        var dest;
+
         if(err) {
             throw new Error(err);
         }
         
-        if(env.output) {
-            fs.writeFileSync(
-                path.resolve(process.cwd(), env.output),
+        if(!env.output) {
+            return console.log(JSON.stringify(data.config, null, 4));
+        }
+
+        dest = path.resolve(process.cwd(), env.output);
+        
+        if(!env.multiple) {
+            return fs.writeFileSync(
+                dest,
                 JSON.stringify(data.config, null, 4),
                 "utf8"
             );
-        } else {
-            console.log(JSON.stringify(data.config, null, 4));
         }
+        
+        // Multiple needs to write to a dir, so make sure it exists
+        shell.mkdir(dest);
+
+        Object.keys(data.config.zones).forEach(function(dns) {
+            var config = {
+                    zones : {}
+                };
+
+            config.zones[dns] = data.config.zones[dns];
+
+            fs.writeFileSync(
+                path.join(dest, dns + ".json"),
+                JSON.stringify(config, null, 4),
+                "utf8"
+            );
+        });
     });
 };
