@@ -1,3 +1,5 @@
+This is a markdown file solely to allow JSON w/ comments to not look totally broken on github. It should really be named `config.json`.
+
 ```js
 {
     "zones" : {
