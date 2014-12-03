@@ -2,15 +2,15 @@
 
 var async = require("async");
 
-module.exports = function(env, done) {
+module.exports = function(env, callback) {
     async.waterfall([
         require("./steps/setup-env")(env),
         require("./steps/read-config")
     ], function(err, result) {
         if(err) {
-            return done(new Error(err));
+            return callback(err);
         }
         
-        done(null, result.config);
+        callback(null, result.config);
     });
 };
