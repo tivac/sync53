@@ -42,7 +42,7 @@ If you define the `AWS_ACCESS_KEY_ID` &
 
 ## Config Format
 
-Running `sync53 import` will give you a local JSON (with comments) config file.
+Running `sync53 import -o <file>` will give you a local JSON (with comment support) config file.
 
 ```js
 {
@@ -68,40 +68,20 @@ Running `sync53 import` will give you a local JSON (with comments) config file.
                     ]
                 },
                 
-                // Simple aliases to records in the same zone use a bare `alias`
+                // Simple aliases to records in the same zone use a bare `alias` property
                 "alias.tivac.com" : {
                     "type" : "A",
                     "alias" : "tivac.com"
                 },
                 
                 // Multiple records are coalesced into an array
-                // Latency-based routing uses the `region` property.
-                // Note also that the `id` property is required for any records
-                // using latency, geolocation, weight, or failover routing
                 "latency.tivac.com" : [{
                     ...
-                    "id" : "euwest1",
-                    "region" : "eu-west-1"
                 }, {
                     ...
-                    "id" : "useast1",
-                    "region" : "us-east-1"
-                }],
-                
-                // Weight-based routing uses the `weight` property
-                "weighted.tivac.com" : [{
-                    ...
-                    "id" : "weight1",
-                    "weight" : 1
-                }, {
-                    ...
-                    "id" : "weight1000",
-                    "weight" : 1000
-                }, {
-                    ...
-                    "id" : "weight10",
-                    "weight" : 10
                 }]
+                
+                // For more examples see /examples/format.json
             }
         },
         
