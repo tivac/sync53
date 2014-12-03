@@ -9,6 +9,7 @@ module.exports = function commit(env, callback) {
         require("./steps/read-config"),
         require("./steps/setup-aws"),
         require("./steps/get-zones"),
+
         function convertConfig(data, done) {
             var changes = require("../transformers/config-to-aws")(data.config, data.zones);
             
