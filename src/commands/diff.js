@@ -11,12 +11,7 @@ module.exports = function(env, callback) {
         require("./steps/read-config"),
         require("./steps/get-zones"),
         require("./steps/get-records"),
-        function awsToObject(data, done) {
-            data.local  = data.config;
-            data.remote = require("../transformers/aws-to-config")(data.aws);
-            
-            done(null, data);
-        },
+        require("./steps/compare-prep"),
         
         function compare(data, done) {
             var changes = diff.diffJson(data.remote, data.local),
