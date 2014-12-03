@@ -62,7 +62,7 @@ program
 
         require("../src/commands/check")(env, function(err, result) {
             if(err) {
-                console.error(err.stack);
+                console.error(err);
                 process.exit(1);
             }
             
@@ -83,7 +83,12 @@ program
 
         creds(env);
 
-        require("../src/commands/diff")(env);
+        require("../src/commands/diff")(env, function(err) {
+            if(err) {
+                console.error(err);
+                process.exit(1);
+            }
+        });
     });
 
 program
@@ -97,7 +102,12 @@ program
 
         creds(env);
 
-        require("../src/commands/commit")(env);
+        require("../src/commands/commit")(env, function(err) {
+            if(err) {
+                console.error(err);
+                process.exit(1);
+            }
+        });
     });
 
 program
@@ -111,7 +121,12 @@ program
 
         creds(env);
 
-        require("../src/commands/clean")(env);
+        require("../src/commands/clean")(env, function(err) {
+            if(err) {
+                console.error(err);
+                process.exit(1);
+            }
+        });
     });
 
 // Show help if unknown command entered

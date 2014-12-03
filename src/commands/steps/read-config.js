@@ -58,7 +58,7 @@ module.exports = function readConfig(data, done) {
         if(err) {
             return done(err.details.map(function(detail) {
                 return "Invalid: " + detail.message + " (" + detail.path + ")";
-            }).join(" "));
+            }).join("\n"));
         }
         
         done(null, data);

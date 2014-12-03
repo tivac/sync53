@@ -4,7 +4,7 @@ var async = require("async"),
     diff  = require("diff"),
     chalk = require("chalk");
 
-module.exports = function(env) {
+module.exports = function(env, callback) {
     async.waterfall([
         require("./steps/setup-env")(env),
         require("./steps/setup-aws"),
@@ -35,9 +35,5 @@ module.exports = function(env) {
             
             done();
         }
-    ], function(err) {
-        if(err) {
-            throw new Error(err);
-        }
-    });
+    ], callback);
 };

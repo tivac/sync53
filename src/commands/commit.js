@@ -3,7 +3,7 @@
 var async = require("async"),
     joi   = require("joi");
 
-module.exports = function commitToAws(env) {
+module.exports = function commit(env, callback) {
     async.waterfall([
         require("./steps/setup-env")(env),
         require("./steps/read-config"),
@@ -68,11 +68,5 @@ module.exports = function commitToAws(env) {
                 done
             );
         }
-    ], function(err, result) {
-        if(err) {
-            throw new Error(err);
-        }
-
-        console.log(result); //TODO: REMOVE DEBUGGING
-    });
+    ], callback);
 };
