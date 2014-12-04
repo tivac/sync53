@@ -11,10 +11,9 @@ This is a markdown file solely to allow JSON w/ comments to not look totally bro
                 // Multiple entries for a single record are an array of objects
                 "example.com" : [
                     {
-                        "type" : "NS",
                         "ttl" : "2 days",
                         // Multiple resources for a single record are an array
-                        "resources" : [
+                        "NS" : [
                             "ns-2035.awsdns-62.co.uk",
                             "ns-706.awsdns-24.net",
                             "ns-334.awsdns-41.com",
@@ -22,25 +21,24 @@ This is a markdown file solely to allow JSON w/ comments to not look totally bro
                         ]
                     },
                     {
-                        "type" : "SOA",
-                        "ttl" : "15 minutes",
                         // A single resource for a record can be just a string
-                        "resources" : "ns-1146.awsdns-15.org. awsdns-hostmaster.amazon.com. 2 7200 900 1209600 60"
+                        "SOA" : "ns-1146.awsdns-15.org. awsdns-hostmaster.amazon.com. 2 7200 900 1209600 60",
+                        "ttl" : "15 minutes"
                     }
                 ],
                 
                 // Simple, easy records
                 "thing-a.example.com." : {
-                    "type" : "A",
-                    "resources" : "127.0.0.40"
+                    "A" : "127.0.0.40"
                 },
                 
                 "thing-b.example.com." : {
-                    "type" : "A",
-                    "resources" : "127.0.0.40"
+                    "A" : "127.0.0.40"
                 }
                 
                 // Aliases to in-zone records can just use the `alias` property and set it to a string
+                // Note that aliases need an explicit type field, it can't be differentiated from a resource
+                // simply.
                 "thing.1001.example.com" : {
                     "type" : "A",
                     "alias" : "thing.example.com"
@@ -106,51 +104,45 @@ This is a markdown file solely to allow JSON w/ comments to not look totally bro
                 // Valid countries and areas are too numerous to list, so good luck.
                 "geoloc.example.com": [
                     {
-                        "type": "A",
+                        "A" : "127.0.0.9",
                         "id": "europe",
                         "location": {
                             "continent": "EU"
-                        },
-                        "resources": "127.0.0.9"
+                        }
                     },
                     {
-                        "type" : "A",
+                        "A" : "127.0.0.10",
                         "id" : "thailand",
                         "location" : {
                             "country" : "TH"
-                        },
-                        "resources" : "127.0.0.10"
+                        }
                     },
                     {
-                        "type" : "A",
+                        "A" : "127.0.0.8",
                         "id" : "washington",
                         "location" : {
                             "country" : "US",
                             "area" : "WA"
-                        },
-                        "resources" : "127.0.0.8"
+                        }
                     }
                 ],
                 
                 // Weighted routing uses the `weight` property with an integer value
                 "weighted.example.com": [
                     {
-                        "type": "A",
+                        "A" : "127.0.0.5",
                         "id": "weight1",
-                        "weight": 1,
-                        "records": "127.0.0.5"
+                        "weight": 1
                     },
                     {
-                        "type": "A",
+                        "A" : "127.0.0.6",
                         "id": "weight10",
-                        "weight": 10,
-                        "records": "127.0.0.6"
+                        "weight": 10
                     },
                     {
-                        "type": "A",
+                        "A" : "127.0.0.7",
                         "id": "weight100",
-                        "weight": 100,
-                        "records": "127.0.0.7"
+                        "weight": 100
                     }
                 ]
             }

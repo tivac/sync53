@@ -25,7 +25,7 @@ moment.locale("en", {
     }
 });
 
-/*jshint maxparams:4 */
+/*jshint maxparams:5 */
 function assign(src, srcPath, tgt, tgtPath, fn) {
     var val = obj.get(src, srcPath);
 
@@ -86,9 +86,23 @@ module.exports = function(aws) {
 
         awsZone.Records.forEach(function(awsRecord) {
             var name   = fqdn.remove(awsRecord.Name),
-                record = {
-                    type : awsRecord.Type
-                };
+                record = {},
+                resources;
+            
+            // Resources
+            if(awsRecord.ResourceRecords.length) {
+                resources = awsRecord.ResourceRecords.map(function(rec) {
+                    return rec.Value;
+                });
+
+                // Can be string or array, depending on length
+                record[awsRecord.Type] = resources.length === 1 ? resources[0] : resources;
+            }
+            
+            // No resources, so set the "type" field
+            if(!(awsRecord.Type in record)) {
+                record.type = awsRecord.Type;
+            }
             
             // TTL
             if(awsRecord.TTL) {
@@ -116,7 +130,7 @@ module.exports = function(aws) {
                     assign(awsRecord, "AliasTarget.DNSName", record, "alias.dns", fqdn.remove);
                     assign(awsRecord, "AliasTarget.EvaluateTargetHealth", record, "alias.health");
                 } else {
-                    record.alias = awsRecord.AliasTarget.DNSName;
+                    record.alias = fqdn.remove(awsRecord.AliasTarget.DNSName);
                 }
             }
 
@@ -124,18 +138,7 @@ module.exports = function(aws) {
             assign(awsRecord, "GeoLocation.ContinentCode", record, "location.continent");
             assign(awsRecord, "GeoLocation.CountryCode", record, "location.country");
             assign(awsRecord, "GeoLocation.SubdivisionCode", record, "location.area");
-
-            if(awsRecord.ResourceRecords.length) {
-                record.records = awsRecord.ResourceRecords.map(function(rec) {
-                    return rec.Value;
-                });
-
-                // Can be string or array, depending on length
-                if(record.records.length === 1) {
-                    record.records = record.records[0];
-                }
-            }
-
+            
             // Adding another onto array
             if(Array.isArray(zone.records[name])) {
                 return zone.records[name].push(record);

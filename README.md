@@ -47,35 +47,35 @@ Running `sync53 import -o <file>` will give you a local JSON (with comment suppo
 ```js
 {
     "zones" : {
-        "tivac.com" : {
+        "example.com" : {
             // Records below that don't specify a `ttl` property will inherit this one
             "ttl" : "5 minutes",
             "records" : {
-                // Simplest possible record, a type and a single `records` IP
-                "tivac.com" : {
-                    "type" : "A",
-                    "records" : "127.0.0.1"
+                // Simplest possible record, single resources IP
+                "example.com" : {
+                    "A" : "127.0.0.1"
                 },
                 
                 // Records with multiple entries use an array
-                "multiple.tivac.com" : {
-                    "type" : "A",
-                    "ttl" : "10 days",
-                    "records" : [
+                "multiple.example.com" : {
+                    "A" : [
                         "127.0.0.2",
                         "127.0.0.3",
                         "127.0.0.4"
-                    ]
+                    ],
+                    "ttl" : "10 days"
                 },
                 
                 // Simple aliases to records in the same zone use a bare `alias` property
-                "alias.tivac.com" : {
+                // Since aliases can't be differentiated from a resource an
+                // explicit type field is required
+                "alias.example.com" : {
                     "type" : "A",
-                    "alias" : "tivac.com"
+                    "alias" : "example.com"
                 },
                 
                 // Multiple records are coalesced into an array
-                "latency.tivac.com" : [{
+                "latency.example.com" : [{
                     ...
                 }, {
                     ...

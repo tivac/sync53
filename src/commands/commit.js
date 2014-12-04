@@ -36,11 +36,12 @@ module.exports = function commit(env, callback) {
                 changes.ChangeBatch.Changes = changes.ChangeBatch.Changes.concat(aliases);
             });
             
+            
             done(null, data);
         },
         
         function validateAws(data, done) {
-            var schema = require("../validators/aws/");
+            var schema = require("../validators/aws");
 
             joi.validate(data.aws, schema, function(err) {
                 if(err) {

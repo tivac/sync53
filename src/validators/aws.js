@@ -1,10 +1,10 @@
 "use strict";
 
 var joi = require("joi"),
-    lib = require("../_lib");
+    lib = require("./_lib"),
+    record;
 
-// All keys are optional by default
-module.exports = joi.object({
+record = joi.object({
     Name : lib.str,
     Type : lib.type,
         
@@ -53,3 +53,14 @@ module.exports = joi.object({
     // Latency-based routing
     Region : lib.region
 });
+
+module.exports = joi.array().includes(joi.object({
+    HostedZoneId : joi.string().regex(/\/hostedzone\/.+/),
+    ChangeBatch : {
+        Comment : joi.string(),
+        Changes : joi.array().includes({
+            Action : joi.string().valid([ "CREATE", "DELETE", "UPSERT" ]),
+            ResourceRecordSet : record
+        })
+    }
+}));

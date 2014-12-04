@@ -1,16 +1,19 @@
 "use strict";
 
-var joi = require("joi"),
-    lib = require("../_lib");
+var joi  = require("joi"),
+    lib    = require("./_lib"),
+    
+    resources = joi.array().includes(lib.str).single(),
+    record;
 
 // All keys are optional by default
-module.exports = joi.object().keys({
-    type    : lib.type,
-    records : joi.array().includes(lib.str).single(),
+record = joi.object().keys({
+    type      : lib.type.optional(),
+    resources : resources,
     
     // Alias record
     alias : joi.alternatives().try(
-        joi.object().keys({
+        joi.object({
             id     : lib.str,
             dns    : lib.str,
             health : joi.boolean()
@@ -35,7 +38,7 @@ module.exports = joi.object().keys({
     weight : joi.number().integer(),
     
     // Geolocation routing
-    location : joi.object().keys({
+    location : joi.object({
         continent : lib.continent,
         
         // Can't specify a country when continent is defined
@@ -48,4 +51,18 @@ module.exports = joi.object().keys({
     })
 
     // TODO: support failover routing
+});
+
+// Add support for type as key for resources
+record = record.pattern(
+    /SOA|A|TXT|NS|CNAME|MX|PTR|SRV|SPF|AAAA/,
+    resources
+);
+
+module.exports = joi.object().keys({
+    zones : joi.object().pattern(/.+/, joi.object({
+        ttl     : lib.ttl,
+        private : joi.boolean(),
+        records : joi.object().pattern(/.+/, joi.array().includes(record).single())
+    }))
 });
