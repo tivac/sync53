@@ -2,7 +2,20 @@
 
 var moment = require("moment"),
     
-    fqdn   = require("../fqdn");
+    fqdn   = require("../fqdn"),
+    types  = [
+        "SOA",
+        "A",
+        "TXT",
+        "NS",
+        "CNAME",
+        "MX",
+        "PTR",
+        "SRV",
+        "SPF",
+        "AAAA"
+    ],
+    cloudFrontId = "Z2FDTNDATAQYW2";
 
 function each(obj, fn) {
     var key;
@@ -19,6 +32,7 @@ function parseTTL(str) {
     return moment.duration(parseInt(ttl[1], 10), ttl[2]).asSeconds();
 }
 
+// Find AWS ID for this zone, we don't put it in the config
 function findZone(zones, name) {
     var item;
     
@@ -32,11 +46,26 @@ function findZone(zones, name) {
         return item;
     });
     
-    if(!item) {
-        throw new Error("Unknown item: " + name);
+    return item;
+}
+
+// Find record type, either from .type or from a list of possible types
+function findType(record) {
+    var result;
+    
+    if(record.type) {
+        return record.type;
     }
     
-    return item;
+    types.some(function(type) {
+        if(type in record) {
+            result = type;
+        }
+        
+        return result;
+    });
+    
+    return result;
 }
 
 module.exports = function(config, zones) {
@@ -67,7 +96,7 @@ module.exports = function(config, zones) {
                     alias;
                 
                 record.Name = domain;
-                record.Type = config.type;
+                record.Type = findType(config);
                 
                 // TTL only set for non-alias records, even if the zone has one
                 if(!config.alias) {
@@ -101,7 +130,10 @@ module.exports = function(config, zones) {
                     
                     record.AliasTarget = {
                         DNSName : alias.dns,
-                        HostedZoneId : findZone(zones, alias.dns).Id.replace("/hostedzone/", ""),
+                        // This is gross, but cloudfront uses a hardcoded HostedZoneId
+                        HostedZoneId : /cloudfront.net/.test(alias.dns) ?
+                            cloudFrontId :
+                            aws.Id.replace("/hostedzone/", ""),
                         EvaluateTargetHealth : !!alias.health
                     };
                     
@@ -109,11 +141,11 @@ module.exports = function(config, zones) {
                 }
                 
                 // Resource records (not required, Aliases don't have 'em)
-                if(!Array.isArray(config.records)) {
-                    config.records = [ config.records ];
+                if(!Array.isArray(config[record.Type])) {
+                    config[record.Type] = [ config[record.Type] ];
                 }
                 
-                record.ResourceRecords = config.records.map(function(value) {
+                record.ResourceRecords = config[record.Type].map(function(value) {
                     return { Value : value };
                 });
                 
