@@ -74,7 +74,7 @@ Running `sync53 import -o <file>` will give you a local JSON (with comment suppo
                     "alias" : "example.com"
                 },
                 
-                // Multiple records are coalesced into an array
+                // Multiple records for a single DNS entry are coalesced into an array
                 "latency.example.com" : [{
                     ...
                 }, {
