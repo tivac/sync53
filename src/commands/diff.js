@@ -27,9 +27,11 @@ module.exports = function(env, callback) {
                         process.stderr.write(chalk.dim(change.value));
                     }
                 });
+
+                console.log("\n\n");
             }
             
-            console.log("\n\n%d diff(s) found", changed);
+            process.stderr.write(changed + " diff(s) found");
             
             done();
         }
