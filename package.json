@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "description": "Sync a Route53 account with a local config",
   "bin": {
-    "sync53": "./bin/"
+    "sync53": "./bin/index.js"
   },
   "main": "./src/index.js",
   "scripts": {
