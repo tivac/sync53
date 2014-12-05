@@ -1,7 +1,8 @@
 "use strict";
 
-var joi  = require("joi"),
-    lib    = require("./_lib"),
+var joi   = require("joi"),
+    lib   = require("./_lib"),
+    types = require("../types.js"),
     
     resources = joi.array().includes(lib.str).single(),
     record;
@@ -14,22 +15,16 @@ record = joi.object().keys({
     // Alias record
     alias : joi.alternatives().try(
         joi.object({
-            id     : lib.str,
             dns    : lib.str,
             health : joi.boolean()
         }),
         lib.str
     ),
     
-    // TTL cannot be set for Alias records
-    ttl : lib.ttl
-        .when("alias", { is : joi.exist(), then : joi.forbidden() }),
+    ttl : lib.ttl,
     
     // ID for multiple records using some form of prioritization (weighted, latency, geo, failover)
-    id : lib.str
-        .when("region",   { is : joi.exist(), then : lib.str.required() })
-        .when("location", { is : joi.exist(), then : lib.str.required() })
-        .when("weight",   { is : joi.exist(), then : lib.str.required() }),
+    id : lib.str,
     
     // Latency routing
     region  : lib.region,
@@ -40,22 +35,26 @@ record = joi.object().keys({
     // Geolocation routing
     location : joi.object({
         continent : lib.continent,
-        
-        // Can't specify a country when continent is defined
-        country : lib.str
-            .when("continent", { is : joi.exist(), then : joi.forbidden() }),
-        
-        // Can't specify an area when country isn't defined
+        country : lib.str,
         area : lib.str
-            .when("country",   { is : joi.exist(), otherwise : joi.forbidden() })
     })
-
-    // TODO: support failover routing
+    // Country/Area must *not* be set if continent is
+    .without("continent", [ "country", "area" ])
 });
+
+record = record
+    // Every record must have either a resources or alias
+    .xor(types.concat("resources", "alias"))
+    // Region/Location/Weight routing require that an ID be set
+    .with("region", "id")
+    .with("location", "id")
+    .with("weight", "id")
+    // TTL must *not* be set if the record is an alias
+    .without("alias", "ttl");
 
 // Add support for type as key for resources
 record = record.pattern(
-    /SOA|A|TXT|NS|CNAME|MX|PTR|SRV|SPF|AAAA/,
+    new RegExp(types.join("|")),
     resources
 );
 
