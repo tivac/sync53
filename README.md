@@ -19,9 +19,9 @@ npm install -g sync53
 
     import [options] [<zones>...]  Import DNS information from Route53
     check <config>                 Validate <config>
-    diff <config> [<zones>...]     Diff current Route53 settings against <config>
+    diff <config> [<zones>...]     Diff Route53 against <config>
     commit <config> [zones...]     Commit <config> to Route53
-    clean <config> [<zones>...]    Compare <config> to Route53 & show stale records
+    clean <config> [<zones>...]    List stale records in Route53
 
   Options:
 
@@ -80,8 +80,6 @@ Running `sync53 import -o <file>` will give you a local JSON (with comment suppo
                 }, {
                     ...
                 }]
-                
-                // For more examples see /examples/format.json
             }
         },
         
@@ -90,6 +88,8 @@ Running `sync53 import -o <file>` will give you a local JSON (with comment suppo
     }
 }
 ```
+
+(Other examples of available config options are available in the [examples folder](https://github.com/tivac/sync53/blob/master/examples/))
 
 Changes made to this local config can then be written back to Route53 using `sync53 commit`.
 

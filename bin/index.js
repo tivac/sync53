@@ -74,7 +74,7 @@ program
 
 program
     .command("diff <config> [<zones>...]")
-    .description("Diff current Route53 settings against <config>")
+    .description("Diff Route53 against <config>")
     .action(function(config, zones, env) {
         env = merge(access, env.parent, env, {
             config : config,
@@ -112,7 +112,7 @@ program
 
 program
     .command("clean <config> [<zones>...]")
-    .description("Compare <config> to Route53 & show stale records")
+    .description("List stale records in Route53")
     .action(function(config, zones, env) {
         env = merge(access, env.parent, env, {
             config : config,
