@@ -3,18 +3,8 @@
 var moment = require("moment"),
     
     fqdn   = require("../fqdn"),
-    types  = [
-        "SOA",
-        "A",
-        "TXT",
-        "NS",
-        "CNAME",
-        "MX",
-        "PTR",
-        "SRV",
-        "SPF",
-        "AAAA"
-    ],
+    types  = require("../types"),
+    
     cloudFrontId = "Z2FDTNDATAQYW2";
 
 function each(obj, fn) {

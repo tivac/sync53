@@ -1,22 +1,12 @@
 "use strict";
 
-var joi = require("joi");
+var joi = require("joi"),
+    types = require("../types.js");
 
 exports.str = joi.string().min(1);
 exports.ttl = joi.string().regex(/\d+ \w+/i);
 
-exports.type = joi.string().valid([
-    "SOA",
-    "A",
-    "TXT",
-    "NS",
-    "CNAME",
-    "MX",
-    "PTR",
-    "SRV",
-    "SPF",
-    "AAAA"
-]).required();
+exports.type = joi.string().valid(types).required();
 
 exports.region = joi.string().valid([
     "us-east-1",
