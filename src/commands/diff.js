@@ -17,14 +17,17 @@ module.exports = function(env, callback) {
             var changes = diff.diffJson(data.remote, data.local),
                 changed = 0;
             
-            changes.forEach(function(change) {
-                if(change.added || change.removed) {
-                    process.stderr.write(chalk["bg" + (change.added ? "Green" : "Red")].bold.white(change.value));
-                    changed++;
-                } else {
-                    process.stderr.write(chalk.dim(change.value));
-                }
-            });
+            // Only show text diff if it would mean anything
+            if(changes.length > 1) {
+                changes.forEach(function(change) {
+                    if(change.added || change.removed) {
+                        process.stderr.write(chalk["bg" + (change.added ? "Green" : "Red")].bold.white(change.value));
+                        changed++;
+                    } else {
+                        process.stderr.write(chalk.dim(change.value));
+                    }
+                });
+            }
             
             console.log("\n\n%d diff(s) found", changed);
             
