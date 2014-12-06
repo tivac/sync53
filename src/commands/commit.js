@@ -36,7 +36,6 @@ module.exports = function commit(env, callback) {
                 changes.ChangeBatch.Changes = changes.ChangeBatch.Changes.concat(aliases);
             });
             
-            
             done(null, data);
         },
         
@@ -56,9 +55,11 @@ module.exports = function commit(env, callback) {
             async.each(
                 data.changes,
                 function(change, cb) {
-                    console.log(JSON.stringify(change, null, 4));
                     data.r53.changeResourceRecordSets(change, function(err, data) {
                         if (err) {
+                            console.log("Invalid Changes:");
+                            console.log(require("util").inspect(change, { depth : null }));
+
                             throw err;
                         }
                         
