@@ -1,6 +1,7 @@
 "use strict";
 
 var moment = require("moment"),
+    object = require("object-path"),
     
     fqdn   = require("../fqdn"),
     types  = require("../types"),
@@ -12,6 +13,12 @@ function each(obj, fn) {
 
     for(key in obj) {
         fn(obj[key], key);
+    }
+}
+
+function setIfDefined(tgt, path, value) {
+    if(typeof value !== "undefined") {
+        object.set(tgt, path, value);
     }
 }
 
@@ -62,11 +69,11 @@ module.exports = function(config, zones) {
     var changes = [];
     
     each(config.zones, function(zone, dns) {
-        var aws = findZone(zones, dns),
+        var aws = findZone(zones, dns).Id.replace("/hostedzone/", ""),
             params = {
-                HostedZoneId : aws.Id,
+                HostedZoneId : aws,
                 ChangeBatch : {
-                    Comment : "sync53-generated change on " + moment().toISOString(),
+                    Comment : "sync53-generated change for '" + dns + "' on " + moment().toISOString(),
                     Changes : []
                 }
             },
@@ -94,24 +101,24 @@ module.exports = function(config, zones) {
                 }
                 
                 // Any sort of routing requires this
-                record.SetIdentifier = config.id;
+                setIfDefined(record, "SetIdentifier", config.id);
                 
                 // Latency-based routing
-                record.Region = config.region;
+                setIfDefined(record, "Region", config.region);
                 
                 // Weight-based routing
-                record.Weight = config.weight;
+                setIfDefined(record, "Weight", config.weight);
                 
                 // Failover-based routing
-                record.Failover = config.failover;
+                setIfDefined(record, "Failover", config.failover);
                 
                 // GeoLocation-based routing
                 if(config.location) {
-                    record.GeoLocation = {
-                        ContinentCode : config.location.continent,
-                        CountryCode : config.location.country,
-                        SubdivisionCode : config.location.area
-                    };
+                    record.GeoLocation = {};
+
+                    setIfDefined(record, "GeoLocation.ContinentCode", config.location.continent);
+                    setIfDefined(record, "GeoLocation.CountryCode", config.location.country);
+                    setIfDefined(record, "GeoLocation.SubdivisionCode", config.location.area);
                 }
                 
                 // Alias (exits early, since it has no resource records to iterate)
@@ -123,7 +130,7 @@ module.exports = function(config, zones) {
                         // This is gross, but cloudfront uses a hardcoded HostedZoneId
                         HostedZoneId : /cloudfront.net/.test(alias.dns) ?
                             cloudFrontId :
-                            aws.Id.replace("/hostedzone/", ""),
+                            aws,
                         EvaluateTargetHealth : !!alias.health
                     };
                     
