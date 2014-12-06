@@ -28,7 +28,7 @@ module.exports = function(env, callback) {
                     }
                 });
 
-                console.log("\n\n");
+                console.log("\n");
             }
             
             process.stderr.write(changed + " diff(s) found");
