@@ -1,6 +1,10 @@
 [sync53](http://sync53.com/)
 ======
-[![Dependency Status](https://david-dm.org/tivac/sync53.svg)](https://david-dm.org/tivac/sync53) [![npm version](https://badge.fury.io/js/sync53.svg)](http://badge.fury.io/js/sync53)
+[![Dependency Status](https://img.shields.io/david/tivac/sync53.svg)](https://david-dm.org/tivac/sync53)
+[![DevDependency Status](https://img.shields.io/david/dev/tivac/sync53.svg)](https://david-dm.org/tivac/sync53#info=devDependencies)
+[![NPM Version](https://img.shields.io/npm/v/sync53.svg)](https://www.npmjs.com/package/sync53)
+[![NPM License](https://img.shields.io/npm/l/sync53.svg)](https://www.npmjs.com/package/sync53)
+[![NPM Downloads](https://img.shields.io/npm/dm/sync53.svg)](https://www.npmjs.com/package/sync53)
 ---
 Update Route53 the right way, with a text config file that you can version. Use your existing revision control & user permissions, then let the tool convert your human-understandable config into all the right AWS jargon.
 
