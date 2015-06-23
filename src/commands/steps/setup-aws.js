@@ -10,11 +10,16 @@ module.exports = function setupAWS(data, done) {
     }
 
     data.r53 = new aws.Route53({
-        accessKeyId     : data.env.key,
-        secretAccessKey : data.env.secret,
         sslEnabled      : true,
+        
+        accessKeyId     : data.env.key || null,
+        secretAccessKey : data.env.secret || null,
+        
         logger          : data.env.verbose ? console : null,
-        httpOptions     : http
+        
+        httpOptions     : {
+            proxy : data.env.proxy || null
+        }
     });
 
     done(null, data);

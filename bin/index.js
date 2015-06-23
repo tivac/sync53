@@ -2,26 +2,8 @@
 "use strict";
 
 var program = require("commander"),
-    access  = {
-        key    : process.env.AWS_ACCESS_KEY_ID,
-        secret : process.env.AWS_SECRET_ACCESS_KEY
-    };
-
-function merge() {
-    var result = {},
-        size   = arguments.length,
-        i, key, obj;
-
-    for(i = 0; i < size; i++) {
-        obj = arguments[i];
-
-        for(key in obj) {
-            result[key] = obj[key];
-        }
-    }
-
-    return result;
-}
+    
+    merge   = require("../src/merge");
 
 function creds(env) {
     if(!env.secret || !env.key) {
@@ -43,11 +25,9 @@ program
     .option("-o, --output <path>", "Save imported config to <path>")
     .option("-m, --multiple", "Save each zone as its own file")
     .action(function(zones, env) {
-        env = merge(access, env.parent, env, {
+        env = merge(env.parent, env, {
             zones : zones
         });
-
-        creds(env);
 
         require("../src/commands/import")(env);
     });
@@ -56,7 +36,7 @@ program
     .command("check <config>")
     .description("Validate <config>")
     .action(function(config, env) {
-        env = merge(access, env.parent, env, {
+        env = merge(env.parent, env, {
             config : config
         });
 
@@ -76,12 +56,10 @@ program
     .command("diff <config> [<zones>...]")
     .description("Diff Route53 against <config>")
     .action(function(config, zones, env) {
-        env = merge(access, env.parent, env, {
+        env = merge(env.parent, env, {
             config : config,
             zones  : zones
         });
-
-        creds(env);
 
         require("../src/commands/diff")(env, function(err) {
             if(err) {
@@ -95,12 +73,10 @@ program
     .command("commit <config> [zones...]")
     .description("Commit <config> to Route53")
     .action(function(config, zones, env) {
-        env = merge(access, env.parent, env, {
+        env = merge(env.parent, env, {
             config : config,
             zones  : zones
         });
-
-        creds(env);
 
         require("../src/commands/commit")(env, function(err) {
             if(err) {
@@ -114,12 +90,10 @@ program
     .command("clean <config> [<zones>...]")
     .description("List stale records in Route53")
     .action(function(config, zones, env) {
-        env = merge(access, env.parent, env, {
+        env = merge(env.parent, env, {
             config : config,
             zones  : zones
         });
-
-        creds(env);
 
         require("../src/commands/clean")(env, function(err) {
             if(err) {
