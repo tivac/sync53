@@ -52,14 +52,13 @@ describe("transformers", function() {
                         }]
                     }]
                 }]);
-
+            
             assert.deepEqual(out, {
                 zones : {
                     "fooga.com" : {
                         records : {
                             "fooga.com" : {
-                                type : "A",
-                                records : "127.0.0.1"
+                                A : "127.0.0.1"
                             }
                         }
                     }
@@ -86,8 +85,7 @@ describe("transformers", function() {
                     "fooga.com" : {
                         records : {
                             "fooga.com" : {
-                                type : "A",
-                                records : [
+                                A : [
                                     "127.0.0.1",
                                     "127.0.0.2"
                                 ]
@@ -127,14 +125,11 @@ describe("transformers", function() {
                     "fooga.com" : {
                         records : {
                             "fooga.com" : [{
-                                type : "A",
-                                records : "127.0.0.1"
+                                A : "127.0.0.1"
                             }, {
-                                type : "A",
-                                records : "127.0.0.1"
+                                A : "127.0.0.1"
                             }, {
-                                type : "A",
-                                records : "127.0.0.1"
+                                A : "127.0.0.1"
                             }]
                         }
                     }
@@ -154,15 +149,14 @@ describe("transformers", function() {
                         }]
                     }]
                 }]);
-
+            
             assert.deepEqual(out, {
                 zones : {
                     "fooga.com" : {
+                        ttl : "5 minutes",
                         records : {
                             "fooga.com" : {
-                                type : "A",
-                                records : "127.0.0.1",
-                                ttl : "5 minutes"
+                                A : "127.0.0.1",
                             }
                         }
                     }

@@ -25,8 +25,8 @@ moment.locale("en", {
     }
 });
 
-/*jshint maxparams:5 */
 function assign(src, srcPath, tgt, tgtPath, fn) {
+    // jshint maxparams:5
     var val = obj.get(src, srcPath);
 
     if(!val) {
@@ -48,6 +48,10 @@ function preferredTTL(zone, ttls) {
             best = ttl;
         }
     });
+   
+    if(typeof best === "undefined") {
+        return zone;
+    }
     
     zone.ttl = best;
     
@@ -77,7 +81,6 @@ module.exports = function(aws) {
     
     aws.forEach(function(awsZone) {
         var zone = {
-                ttl : "",
                 records : {}
             },
             ttls = {};
@@ -96,7 +99,9 @@ module.exports = function(aws) {
                 });
 
                 // Can be string or array, depending on length
-                record[awsRecord.Type] = resources.length === 1 ? resources[0] : resources;
+                record[awsRecord.Type] = resources.length === 1 ?
+                    resources[0] :
+                    resources;
             }
             
             // No resources, so set the "type" field
