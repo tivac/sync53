@@ -19,20 +19,20 @@
   "author": "Pat Cavit <pcavit@arena.net>",
   "license": "MIT",
   "devDependencies": {
-    "istanbul": "^0.3.2",
-    "mocha": "^2.0.1"
+    "istanbul": "^0.3.15",
+    "mocha": "^2.2.5"
   },
   "dependencies": {
     "async": "^0.9.0",
     "aws-sdk": "^2.0.29",
-    "chalk": "^0.5.1",
+    "chalk": "^1.0.0",
     "commander": "^2.5.0",
     "diff": "^1.2.0",
     "diff2": "^0.1.7",
     "joi": "^5.0.1",
     "moment": "^2.8.4",
     "object-path": "^0.8.1",
-    "shelljs": "^0.3.0",
+    "shelljs": "^0.5.1",
     "strip-json-comments": "^1.0.2"
   },
   "repository": {
