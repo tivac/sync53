@@ -50,6 +50,10 @@ module.exports = function(env) {
 
         dest = path.resolve(process.cwd(), env.output);
         
+        // Make sure output dir exists before writing there
+        shell.mkdir("-p", dest);
+        
+        // Single file
         if(!env.multiple) {
             return fs.writeFileSync(
                 dest,
@@ -58,9 +62,7 @@ module.exports = function(env) {
             );
         }
         
-        // Multiple needs to write to a dir, so make sure it exists
-        shell.mkdir(dest);
-
+        // One file per zone
         Object.keys(data.config.zones).forEach(function(dns) {
             var config = {
                     zones : {}
