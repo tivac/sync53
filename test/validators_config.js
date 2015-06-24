@@ -1,8 +1,6 @@
 "use strict";
 
-var assert   = require("assert"),
-
-    joi      = require("joi"),
+var joi      = require("joi"),
 
     schema = require("../src/validators/config.js");
 
@@ -131,7 +129,7 @@ describe("validators", function() {
                             "fooga.com" : {
                                 records : {
                                     "tooga.fooga.com" : {
-                                        type : "A",
+                                        type  : "A",
                                         alias : "fooga.com"
                                     }
                                 }
@@ -146,9 +144,9 @@ describe("validators", function() {
                             "fooga.com" : {
                                 records : {
                                     "tooga.fooga.com" : {
-                                        type : "A",
+                                        type  : "A",
                                         alias : {
-                                            dns : "thing.example.com",
+                                            dns    : "thing.example.com",
                                             health : true
                                         }
                                     }
@@ -164,7 +162,7 @@ describe("validators", function() {
                             "fooga.com" : {
                                 records : {
                                     "tooga.fooga.com" : {
-                                        type : "A",
+                                        type  : "A",
                                         alias : "123456asdfasd.cloudfront.net"
                                     }
                                 }
@@ -180,60 +178,107 @@ describe("validators", function() {
                         zones : {
                             "example.com" : {
                                 records : {
-                                    "thing.example.com" : [
-                                        {
-                                            type : "A",
-                                            id : "DFW",
-                                            region : "us-west-1",
-                                            alias : "thing-a.example.com"
-                                        },
-                                        {
-                                            type : "A",
-                                            id : "FRA",
-                                            region : "eu-west-1",
-                                            alias : "thing-b.example.com"
-                                        }
-                                    ]
+                                    "thing.example.com" : {
+                                        type   : "A",
+                                        id     : "DFW",
+                                        region : "us-west-1",
+                                        alias  : "thing-a.example.com"
+                                    }
                                 }
                             }
                         }
                     });
                 });
 
-                it("")
-
-                it("should support geolocation based routing", function() {
-                    valid({
+                it("should require an id for latency based routing", function() {
+                    invalid({
                         zones : {
                             "example.com" : {
                                 records : {
-                                    "geoloc.example.com": [
-                                        {
-                                            A : "127.0.0.9",
-                                            id: "europe",
+                                    "thing.example.com" : {
+                                        type   : "A",
+                                        region : "us-west-1",
+                                        alias  : "thing-a.example.com"
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+                
+                describe("gelocation routing", function() {
+                    it("should support geolocation routing", function() {
+                        valid({
+                            zones : {
+                                "example.com" : {
+                                    records : {
+                                        "geoloc.example.com" : {
+                                            A  : "127.0.0.9",
+                                            id : "europe",
+                                            
                                             location : {
                                                 continent : "EU"
                                             }
                                         },
-                                        {
-                                            A : "127.0.0.10",
+                                        "geoloc2.example.com" : {
+                                            A  : "127.0.0.10",
                                             id : "thailand",
+                                            
                                             location : {
                                                 country : "TH"
                                             }
                                         },
-                                        {
-                                            A : "127.0.0.8",
+                                        "geoloc3.example.com" : {
+                                            A  : "127.0.0.8",
                                             id : "washington",
+                                            
                                             location : {
                                                 country : "US",
-                                                area : "WA"
+                                                area    : "WA"
                                             }
                                         }
-                                    ]
+                                    }
                                 }
                             }
-                        }
+                        });
+                    });
+
+                    it("shouldn't allow country/area with continent", function() {
+                        invalid({
+                            zones : {
+                                "example.com" : {
+                                    records : {
+                                        "geoloc.example.com" : {
+                                            A  : "127.0.0.9",
+                                            id : "europe",
+                                            
+                                            location : {
+                                                continent : "EU",
+                                                country   : "FR"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                        
+                        invalid({
+                            zones : {
+                                "example.com" : {
+                                    records : {
+                                        "geoloc.example.com" : {
+                                            A  : "127.0.0.9",
+                                            id : "europe",
+                                            
+                                            location : {
+                                                continent : "NA",
+                                                area      : "WA"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
                     });
                 });
 
@@ -242,23 +287,11 @@ describe("validators", function() {
                         zones : {
                             "example.com" : {
                                 records : {
-                                    "weighted.example.com": [
-                                        {
-                                            A : "127.0.0.5",
-                                            id: "weight1",
-                                            weight : 1
-                                        },
-                                        {
-                                            A : "127.0.0.6",
-                                            id: "weight10",
-                                            weight : 10
-                                        },
-                                        {
-                                            A : "127.0.0.7",
-                                            id: "weight100",
-                                            weight : 100
-                                        }
-                                    ]
+                                    "weighted.example.com" : {
+                                        A      : "127.0.0.5",
+                                        id     : "weight1",
+                                        weight : 1
+                                    }
                                 }
                             }
                         }
@@ -292,7 +325,7 @@ describe("validators", function() {
                         }
                     } 
                 });
-            })
+            });
         });
     });
 });
