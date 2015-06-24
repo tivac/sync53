@@ -1,9 +1,7 @@
 "use strict";
 
-var joi   = require("joi"),
-    lib   = require("./_lib"),
-    
-    record = require("./_record");
+var joi = require("joi"),
+    lib = require("./_lib");
 
 module.exports = joi.object().keys({
     zones : joi.object().pattern(/.+/, joi.object({
@@ -11,7 +9,7 @@ module.exports = joi.object().keys({
         private : joi.boolean(),
         records : joi.object().pattern(
             /.+/,
-            joi.array().items(record).single()
+            joi.array().single().items(require("./record"))
         )
     }))
 });

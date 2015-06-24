@@ -51,7 +51,9 @@
       "key-spacing": [
         2,
         {
-          "align": "value "
+          "beforeColon": true,
+          "afterColon": true,
+          "align": "colon"
         }
       ],
       "no-caller": 2,
