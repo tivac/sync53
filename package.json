@@ -48,9 +48,7 @@
       "curly": 2,
       "dot-notation": 2,
       "eol-last": 0,
-      "key-spacing": [
-        2,
-        {
+      "key-spacing": [2, {
           "beforeColon": true,
           "afterColon": true,
           "align": "colon"
@@ -72,9 +70,7 @@
       "no-implied-eval": 2,
       "no-inner-declarations": 2,
       "no-mixed-requires": 0,
-      "no-multi-spaces": [
-        2,
-        {
+      "no-multi-spaces": [2, {
           "exceptions": {
             "VariableDeclarator": true
           }
