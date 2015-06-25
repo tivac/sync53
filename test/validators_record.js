@@ -47,7 +47,7 @@ describe("validators", function() {
                 });
             });
             
-            it("should not support a ttl", function() {
+            it.skip("should not support a ttl", function() {
                 ok.invalid({
                     ttl : "5 minutes",
                     A   : {
@@ -68,21 +68,31 @@ describe("validators", function() {
         });
         
         describe("routing", function() {
+            it("should only allow one type of routing at a time", function() {
+                ok.invalid({
+                    A  : "127.0.0.1",
+                    id : "local",
+                    
+                    region   : "us-west-1",
+                    location : {
+                        continent : "EU"
+                    }
+                });
+            });
+            
             describe("latency-based", function() {
                 it("should be supported", function() {
                     ok.valid({
-                        type   : "A",
+                        A      : "127.0.0.1",
                         id     : "DFW",
-                        region : "us-west-1",
-                        alias  : "thing-a.example.com"
+                        region : "us-west-1"
                     });
                 });
 
                 it("should require an id", function() {
                     ok.invalid({
-                        type   : "A",
-                        region : "us-west-1",
-                        alias  : "thing-a.example.com"
+                        A      : "127.0.0.1",
+                        region : "us-west-1"
                     });
                 });
             });

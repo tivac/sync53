@@ -3,9 +3,13 @@
 var joi = require("joi");
 
 module.exports = [
-    joi.string().ip(),
-    joi.string().hostname(),
-    joi.string(),
+    // Records can be an array, or not
+    joi.array().single().items(
+        joi.string().ip(),
+        joi.string().hostname(),
+        joi.string()
+    ),
+    
     // Alias records are an object
     joi.object().keys({
         alias : [

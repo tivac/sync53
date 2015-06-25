@@ -28,12 +28,16 @@ module.exports = joi.object().keys({
             // Country/Area must *not* be set if continent is
             .without("continent", [ "country", "area" ])
     })
-    // Every record must have either have a resource type
+    // Every record must have a resource type
     .xor(types)
     // Region/Location/Weight routing require that an ID be set
     .with("region", "id")
     .with("location", "id")
     .with("weight", "id")
+    // Can only use one type of routing
+    .without("region", [ "location", "weight" ])
+    .without("weight", [ "location", "region" ])
+    .without("location", [ "region", "weight" ])
     // Check to ensure that resource-type keys are correct
     .pattern(
         new RegExp(types.join("|")),
