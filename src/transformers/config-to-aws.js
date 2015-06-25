@@ -10,7 +10,7 @@ var moment = require("moment"),
 
 function each(obj, fn) {
     var key;
-
+    
     for(key in obj) {
         fn(obj[key], key);
     }
@@ -50,10 +50,6 @@ function findZone(zones, name) {
 function findType(record) {
     var result;
     
-    if(record.type) {
-        return record.type;
-    }
-    
     types.some(function(type) {
         if(type in record) {
             result = type;
@@ -72,7 +68,7 @@ module.exports = function(config, zones) {
         var aws = findZone(zones, dns).Id.replace("/hostedzone/", ""),
             params = {
                 HostedZoneId : aws,
-                ChangeBatch : {
+                ChangeBatch  : {
                     Comment : "sync53-generated change for '" + dns + "' on " + moment().toISOString(),
                     Changes : []
                 }
@@ -84,65 +80,69 @@ module.exports = function(config, zones) {
                 records = [ records ];
             }
             
-            records.forEach(function(config) {
+            records.forEach(function(src) {
                 var record = {},
                     change = {
-                        Action : "UPSERT",
+                        Action            : "UPSERT",
                         ResourceRecordSet : record
                     },
                     alias;
                 
                 record.Name = domain;
-                record.Type = findType(config);
+                record.Type = findType(src);
+                
+                alias = src[record.Type].alias;
                 
                 // TTL only set for non-alias records, even if the zone has one
-                if(!config.alias) {
-                    record.TTL = config.ttl ? parseTTL(config.ttl) : ttl;
+                if(!alias) {
+                    record.TTL = src.ttl ? parseTTL(src.ttl) : ttl;
                 }
                 
                 // Any sort of routing requires this
-                setIfDefined(record, "SetIdentifier", config.id);
+                setIfDefined(record, "SetIdentifier", src.id);
                 
                 // Latency-based routing
-                setIfDefined(record, "Region", config.region);
+                setIfDefined(record, "Region", src.region);
                 
                 // Weight-based routing
-                setIfDefined(record, "Weight", config.weight);
+                setIfDefined(record, "Weight", src.weight);
                 
                 // Failover-based routing
-                setIfDefined(record, "Failover", config.failover);
+                setIfDefined(record, "Failover", src.failover);
                 
                 // GeoLocation-based routing
-                if(config.location) {
+                if(src.location) {
                     record.GeoLocation = {};
 
-                    setIfDefined(record, "GeoLocation.ContinentCode", config.location.continent);
-                    setIfDefined(record, "GeoLocation.CountryCode", config.location.country);
-                    setIfDefined(record, "GeoLocation.SubdivisionCode", config.location.area);
+                    setIfDefined(record, "GeoLocation.ContinentCode", src.location.continent);
+                    setIfDefined(record, "GeoLocation.CountryCode", src.location.country);
+                    setIfDefined(record, "GeoLocation.SubdivisionCode", src.location.area);
                 }
                 
                 // Alias (exits early, since it has no resource records to iterate)
-                if(config.alias) {
-                    alias = typeof config.alias === "string" ? { dns : config.alias } : config.alias;
+                if(alias) {
+                    alias = typeof alias === "string" ? { dns : alias } : alias;
                     
                     record.AliasTarget = {
                         DNSName : alias.dns,
+                        
+                        EvaluateTargetHealth : !!alias.health,
+                        
                         // This is gross, but cloudfront uses a hardcoded HostedZoneId
-                        HostedZoneId : /cloudfront.net/.test(alias.dns) ?
+                        HostedZoneId : /cloudfront\.net/.test(alias.dns) ?
                             cloudFrontId :
-                            aws,
-                        EvaluateTargetHealth : !!alias.health
+                            aws
                     };
                     
                     return params.ChangeBatch.Changes.push(change);
                 }
                 
-                // Resource records (not required, Aliases don't have 'em)
-                if(!Array.isArray(config[record.Type])) {
-                    config[record.Type] = [ config[record.Type] ];
+                // Resource records
+                if(!Array.isArray(src[record.Type])) {
+                    src[record.Type] = [ src[record.Type] ];
                 }
                 
-                record.ResourceRecords = config[record.Type].map(function(value) {
+                record.ResourceRecords = src[record.Type].map(function(value) {
                     return { Value : value };
                 });
                 
