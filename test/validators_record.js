@@ -20,27 +20,49 @@ describe("validators", function() {
         });
         
         describe("alias records", function() {
-            it("should support alias records", function() {
+            it("should be supported", function() {
                 ok.valid({
-                    type  : "A",
-                    alias : "fooga.com"
-                });
-            });
-            
-            it("should support alias records with a health check", function() {
-                ok.valid({
-                    type  : "A",
-                    alias : {
-                        dns    : "thing.example.com",
-                        health : true
+                    A : {
+                        alias : "fooga.com"
                     }
                 });
             });
             
-            it("should support alias records to cloudfront", function() {
+            it("should support health checks", function() {
                 ok.valid({
-                    type  : "A",
-                    alias : "123456asdfasd.cloudfront.net"
+                    A : {
+                        alias : {
+                            dns    : "thing.example.com",
+                            health : true
+                        }
+                    }
+                });
+            });
+            
+            it("should support cloudfront", function() {
+                ok.valid({
+                    A : {
+                        alias : "123456asdfasd.cloudfront.net"
+                    }
+                });
+            });
+            
+            it("should not support a ttl", function() {
+                ok.invalid({
+                    ttl : "5 minutes",
+                    A   : {
+                        alias : "fooga.com"
+                    }
+                });
+            });
+            
+            it("should require a dns value", function() {
+                ok.invalid({
+                    A : {
+                        alias : {
+                            health : true
+                        }
+                    }
                 });
             });
         });
