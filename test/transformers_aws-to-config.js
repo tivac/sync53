@@ -7,7 +7,7 @@ describe("transformers", function() {
     describe("AWS to Config", function() {
         it("should create top-level zones", function() {
             var out = transform([{
-                    Name : "fooga.com.",
+                    Name    : "fooga.com.",
                     Records : []
                 }]);
 
@@ -22,10 +22,10 @@ describe("transformers", function() {
 
         it("should create multiple top-level zones", function() {
             var out = transform([{
-                    Name : "fooga.com.",
+                    Name    : "fooga.com.",
                     Records : []
                 }, {
-                    Name : "wooga.com.",
+                    Name    : "wooga.com.",
                     Records : []
                 }]);
 
@@ -43,10 +43,11 @@ describe("transformers", function() {
 
         it("should convert simple records", function() {
             var out = transform([{
-                    Name : "fooga.com.",
+                    Name    : "fooga.com.",
                     Records : [{
                         Name : "fooga.com.",
                         Type : "A",
+                        
                         ResourceRecords : [{
                             Value : "127.0.0.1"
                         }]
@@ -68,10 +69,11 @@ describe("transformers", function() {
 
         it("should convert simple records with multiple IPs", function() {
             var out = transform([{
-                    Name : "fooga.com.",
+                    Name    : "fooga.com.",
                     Records : [{
                         Name : "fooga.com.",
                         Type : "A",
+                        
                         ResourceRecords : [{
                             Value : "127.0.0.1"
                         }, {
@@ -98,22 +100,25 @@ describe("transformers", function() {
 
         it("should coalesce records sharing the same FQDN", function() {
             var out = transform([{
-                    Name : "fooga.com.",
+                    Name    : "fooga.com.",
                     Records : [{
                         Name : "fooga.com.",
                         Type : "A",
+                        
                         ResourceRecords : [{
                             Value : "127.0.0.1"
                         }]
                     }, {
                         Name : "fooga.com.",
                         Type : "A",
+                        
                         ResourceRecords : [{
                             Value : "127.0.0.1"
                         }]
                     }, {
                         Name : "fooga.com.",
                         Type : "A",
+                        
                         ResourceRecords : [{
                             Value : "127.0.0.1"
                         }]
@@ -139,11 +144,12 @@ describe("transformers", function() {
 
         it("should convert TTL in seconds to human durations", function() {
             var out = transform([{
-                    Name : "fooga.com.",
+                    Name    : "fooga.com.",
                     Records : [{
                         Name : "fooga.com.",
                         Type : "A",
-                        TTL : 300,
+                        TTL  : 300,
+                        
                         ResourceRecords : [{
                             Value : "127.0.0.1"
                         }]
@@ -153,10 +159,10 @@ describe("transformers", function() {
             assert.deepEqual(out, {
                 zones : {
                     "fooga.com" : {
-                        ttl : "5 minutes",
+                        ttl     : "5 minutes",
                         records : {
                             "fooga.com" : {
-                                A : "127.0.0.1",
+                                A : "127.0.0.1"
                             }
                         }
                     }
@@ -164,16 +170,18 @@ describe("transformers", function() {
             });
         });
 
-        it("should convert AliasTarget data into a simpler form", function() {
+        it("should convert AliasTarget data", function() {
             var out = transform([{
-                    Name : "fooga.com.",
+                    Name    : "fooga.com.",
                     Records : [{
                         Name : "fooga.com.",
                         Type : "A",
+                        
                         AliasTarget : {
-                            DNSName : "fooga.com",
+                            DNSName              : "fooga.com",
                             EvaluateTargetHealth : false
                         },
+                        
                         ResourceRecords : []
                     }]
                 }]);
@@ -183,8 +191,9 @@ describe("transformers", function() {
                     "fooga.com" : {
                         records : {
                             "fooga.com" : {
-                                type : "A",
-                                alias : "fooga.com"
+                                A : {
+                                    alias : "fooga.com"
+                                }
                             }
                         }
                     }
@@ -194,14 +203,17 @@ describe("transformers", function() {
 
         it("should convert AliasTarget data with a health check", function() {
             var out = transform([{
-                    Name : "fooga.com.",
+                    Name    : "fooga.com.",
                     Records : [{
                         Name : "fooga.com.",
                         Type : "A",
+                        
                         AliasTarget : {
                             DNSName : "fooga.com",
+                            
                             EvaluateTargetHealth : true
                         },
+                        
                         ResourceRecords : []
                     }]
                 }]);
@@ -211,10 +223,11 @@ describe("transformers", function() {
                     "fooga.com" : {
                         records : {
                             "fooga.com" : {
-                                type : "A",
-                                alias : {
-                                    dns : "fooga.com",
-                                    health : true
+                                A : {
+                                    alias : {
+                                        dns    : "fooga.com",
+                                        health : true
+                                    }
                                 }
                             }
                         }

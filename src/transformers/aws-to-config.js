@@ -57,13 +57,15 @@ function preferredTTL(zone, ttls) {
     
     Object.keys(zone.records).forEach(function(dns) {
         if(Array.isArray(zone.records[dns])) {
-            return zone.records[dns] = zone.records[dns].map(function(record) {
+            zone.records[dns] = zone.records[dns].map(function(record) {
                 if(record.ttl && record.ttl === best) {
                     delete record.ttl;
                 }
                 
                 return record;
             });
+            
+            return;
         }
         
         if(zone.records[dns].ttl && zone.records[dns].ttl === best) {
@@ -89,6 +91,7 @@ module.exports = function(aws) {
 
         awsZone.Records.forEach(function(awsRecord) {
             var name   = fqdn.remove(awsRecord.Name),
+                type   = awsRecord.Type,
                 record = {},
                 resources;
             
@@ -99,14 +102,9 @@ module.exports = function(aws) {
                 });
 
                 // Can be string or array, depending on length
-                record[awsRecord.Type] = resources.length === 1 ?
+                record[type] = resources.length === 1 ?
                     resources[0] :
                     resources;
-            }
-            
-            // No resources, so set the "type" field
-            if(!(awsRecord.Type in record)) {
-                record.type = awsRecord.Type;
             }
             
             // TTL
@@ -132,10 +130,10 @@ module.exports = function(aws) {
             // Alias
             if(awsRecord.AliasTarget) {
                 if(obj.get(awsRecord, "AliasTarget.EvaluateTargetHealth")) {
-                    assign(awsRecord, "AliasTarget.DNSName", record, "alias.dns", fqdn.remove);
-                    assign(awsRecord, "AliasTarget.EvaluateTargetHealth", record, "alias.health");
+                    assign(awsRecord, "AliasTarget.DNSName", record, type + ".alias.dns", fqdn.remove);
+                    assign(awsRecord, "AliasTarget.EvaluateTargetHealth", record, type + ".alias.health");
                 } else {
-                    record.alias = fqdn.remove(awsRecord.AliasTarget.DNSName);
+                    assign(awsRecord, "AliasTarget.DNSName", record, type + ".alias", fqdn.remove);
                 }
             }
 
@@ -146,15 +144,19 @@ module.exports = function(aws) {
             
             // Adding another onto array
             if(Array.isArray(zone.records[name])) {
-                return zone.records[name].push(record);
+                zone.records[name].push(record);
+                
+                return;
             }
 
             // Convert single to array
             if(zone.records[name]) {
-                return zone.records[name] = [
+                zone.records[name] = [
                     zone.records[name],
                     record
                 ];
+                
+                return;
             }
 
             // Simple assignment
