@@ -15,15 +15,15 @@ module.exports = function getZones(data, done) {
             data.r53.listHostedZones({
                 MaxItems : "5",
                 Marker   : marker
-            }, function(err, data) {
+            }, function(err, result) {
                 if(err) {
                     return cb(err);
                 }
 
-                zones = zones.concat(data.HostedZones);
+                zones = zones.concat(result.HostedZones);
 
-                marker    = data.NextMarker;
-                completed = !data.IsTruncated;
+                marker = result.NextMarker;
+                completed = !result.IsTruncated;
 
                 cb();
             });

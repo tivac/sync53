@@ -1,6 +1,8 @@
 "use strict";
 
-var joi = require("joi");
+var joi = require("joi"),
+    
+    lib = require("./_lib");
 
 module.exports = [
     // Records can be an array, or not
@@ -15,10 +17,11 @@ module.exports = [
         alias : [
             joi.string().hostname(),
             joi.object().keys({
+                region : lib.region,
                 dns    : joi.string().hostname(),
                 health : joi.boolean()
             })
-            .requiredKeys("dns")
+            .xor("dns", "region")
         ]
     })
 ]; 

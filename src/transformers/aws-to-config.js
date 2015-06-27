@@ -129,11 +129,23 @@ module.exports = function(aws) {
 
             // Alias
             if(awsRecord.AliasTarget) {
-                if(obj.get(awsRecord, "AliasTarget.EvaluateTargetHealth")) {
-                    assign(awsRecord, "AliasTarget.DNSName", record, type + ".alias.dns", fqdn.remove);
-                    assign(awsRecord, "AliasTarget.EvaluateTargetHealth", record, type + ".alias.health");
+                // if there's no health check and it's not an S3 alias we can do this simply
+                if(!obj.get(awsRecord, "AliasTarget.EvaluateTargetHealth") &&
+                    obj.get(awsRecord, "AliasTarget.DNSName").indexOf("s3-website") !== 0) {
+                        assign(awsRecord, "AliasTarget.DNSName", record, type + ".alias", fqdn.remove);
                 } else {
-                    assign(awsRecord, "AliasTarget.DNSName", record, type + ".alias", fqdn.remove);
+                    // S3 websites have a region property
+                    if(obj.get(awsRecord, "AliasTarget.DNSName").indexOf("s3-website") === 0) {
+                        assign(awsRecord, "AliasTarget.DNSName", record, type + ".alias.region", function(dns) {
+                            return /^s3-website-(.+)\.amazonaws\.com\.$/.exec(dns)[1];
+                        });
+                    } else {
+                        // Otherwise just use a dns field
+                        assign(awsRecord, "AliasTarget.DNSName", record, type + ".alias.dns", fqdn.remove);
+                    }
+                    
+                    // Set HealthCheck boolean
+                    assign(awsRecord, "AliasTarget.EvaluateTargetHealth", record, type + ".alias.health");
                 }
             }
 
