@@ -21,9 +21,10 @@ module.exports = function commit(env, callback) {
         // Ensure that aliases come last, in case they depend on records earlier in the batch
         function aliasesLast(data, done) {
             data.changes.forEach(function(changes) {
-                var aliases = [];
+                var aliases = [],
+                    others;
                 
-                changes.ChangeBatch.Changes = changes.ChangeBatch.Changes.filter(function(change) {
+                others = changes.ChangeBatch.Changes.filter(function(change) {
                     if("AliasTarget" in change.ResourceRecordSet) {
                         aliases.push(change);
                         
@@ -33,7 +34,7 @@ module.exports = function commit(env, callback) {
                     return true;
                 });
                 
-                changes.ChangeBatch.Changes = changes.ChangeBatch.Changes.concat(aliases);
+                changes.ChangeBatch.Changes = others.concat(aliases);
             });
             
             done(null, data);
@@ -55,7 +56,7 @@ module.exports = function commit(env, callback) {
             async.each(
                 data.changes,
                 function(change, cb) {
-                    data.r53.changeResourceRecordSets(change, function(err, data) {
+                    data.r53.changeResourceRecordSets(change, function(err, result) {
                         if (err) {
                             console.log("Invalid Changes:");
                             console.log(require("util").inspect(change, { depth : null }));
@@ -63,7 +64,7 @@ module.exports = function commit(env, callback) {
                             throw err;
                         }
                         
-                        console.log(data);
+                        console.log(result);
                         
                         cb();
                     });
