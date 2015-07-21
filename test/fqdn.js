@@ -7,15 +7,21 @@ describe("lib", function() {
     describe("FQDN", function() {
         describe(".add()", function() {
             it("should add a trailing period", function() {
-                var out = fqdn.add("tivac.com");
-                
-                assert.equal(out, "tivac.com.");
+                assert.equal(fqdn.add("tivac.com"), "tivac.com.");
+            });
+            
+            it("should not over-add trailing periods", function() {
+                assert.equal(fqdn.add("tivac.com."), "tivac.com.");
             });
         });
         
         describe(".remove()", function() {
             it("should remove a trailing period", function() {
                 assert.equal(fqdn.remove("tivac.com."), "tivac.com");
+            });
+            
+            it("should not over-remove trailing periods", function() {
+                assert.equal(fqdn.remove("tivac.com"), "tivac.com");
             });
         });
     });
