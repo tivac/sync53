@@ -9,6 +9,8 @@
 ---
 Update Route53 the right way, with a text config file that you can version. Use your existing revision control & user permissions, then let the tool convert your human-understandable config into all the right AWS jargon.
 
+## :warning: :zap: :warning: This project is UNMAINTAINED :warning: :zap: :warning:
+
 ## Install
 
 ```
